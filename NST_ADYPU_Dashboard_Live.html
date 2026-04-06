@@ -1,0 +1,1813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NST ADYPU — Master Dashboard</title>
+<style>
+/* ── Google Fonts ── */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+/* ══════════════════════════════════════════════
+   THEME DEFINITIONS  — 6 palettes
+   ══════════════════════════════════════════════ */
+
+/* 1. Midnight Slate (default — easy on eyes, deep blue-grey) */
+[data-theme="midnight"] {
+  --bg:#0f1623;--bg2:#141d2e;--bg3:#1a2540;--card:#18223a;--card2:#1f2d4a;
+  --border:#243352;--border2:#2e4068;
+  --accent:#5b8dee;--accent2:#7c6de8;
+  --green:#34d399;--red:#f87171;--orange:#fbbf24;--cyan:#38bdf8;--pink:#f472b6;--purple:#a78bfa;
+  --text:#e2eaf8;--text2:#8fa3c8;--text3:#4d6490;
+  --shadow:rgba(0,0,0,.45);
+  --btn-top:rgba(255,255,255,.13);--btn-bot:rgba(255,255,255,.03);
+  --btn-shine:rgba(255,255,255,.18);
+}
+
+/* 2. Sage Forest (calm green — restful) */
+[data-theme="sage"] {
+  --bg:#0e1a14;--bg2:#121f18;--bg3:#182b1f;--card:#162619;--card2:#1d3021;
+  --border:#254730;--border2:#2e5a3b;
+  --accent:#4ade80;--accent2:#34d399;
+  --green:#4ade80;--red:#f87171;--orange:#fb923c;--cyan:#67e8f9;--pink:#f9a8d4;--purple:#c084fc;
+  --text:#d9f0e3;--text2:#7db890;--text3:#3d7050;
+  --shadow:rgba(0,0,0,.45);
+  --btn-top:rgba(255,255,255,.12);--btn-bot:rgba(255,255,255,.02);
+  --btn-shine:rgba(255,255,255,.16);
+}
+
+/* 3. Rose Quartz (warm pink — elegant) */
+[data-theme="rose"] {
+  --bg:#1a0f14;--bg2:#21141a;--bg3:#2b1a22;--card:#24161d;--card2:#2f1e27;
+  --border:#47283a;--border2:#5c3449;
+  --accent:#fb7bb8;--accent2:#f472b6;
+  --green:#6ee7b7;--red:#fca5a5;--orange:#fcd34d;--cyan:#93c5fd;--pink:#fb7bb8;--purple:#c4b5fd;
+  --text:#fce7f0;--text2:#c994b3;--text3:#7a4f66;
+  --shadow:rgba(0,0,0,.45);
+  --btn-top:rgba(255,255,255,.14);--btn-bot:rgba(255,255,255,.03);
+  --btn-shine:rgba(255,255,255,.2);
+}
+
+/* 4. Arctic Frost (light mode — clean & bright) */
+[data-theme="frost"] {
+  --bg:#f0f4f8;--bg2:#e8eef5;--bg3:#dde6f0;--card:#ffffff;--card2:#f4f8fc;
+  --border:#c8d8ea;--border2:#b2c8de;
+  --accent:#2563eb;--accent2:#4f46e5;
+  --green:#059669;--red:#dc2626;--orange:#d97706;--cyan:#0891b2;--pink:#db2777;--purple:#7c3aed;
+  --text:#1e2d45;--text2:#4b6589;--text3:#8da5c4;
+  --shadow:rgba(37,99,235,.12);
+  --btn-top:rgba(255,255,255,.9);--btn-bot:rgba(255,255,255,.4);
+  --btn-shine:rgba(255,255,255,.95);
+}
+
+/* 5. Amber Dusk (warm amber — cozy) */
+[data-theme="amber"] {
+  --bg:#180f05;--bg2:#1e1408;--bg3:#271b0c;--card:#221600;--card2:#2c1f0a;
+  --border:#4a3010;--border2:#5e3e18;
+  --accent:#f59e0b;--accent2:#fb923c;
+  --green:#86efac;--red:#fca5a5;--orange:#f59e0b;--cyan:#67e8f9;--pink:#f9a8d4;--purple:#d8b4fe;
+  --text:#fef3c7;--text2:#c79c4a;--text3:#7a5e28;
+  --shadow:rgba(0,0,0,.5);
+  --btn-top:rgba(255,255,255,.12);--btn-bot:rgba(255,255,255,.02);
+  --btn-shine:rgba(255,245,200,.25);
+}
+
+/* 6. Ocean Depth (teal blue — focused) */
+[data-theme="ocean"] {
+  --bg:#050f1a;--bg2:#08152a;--bg3:#0e1f3a;--card:#0a1828;--card2:#101f36;
+  --border:#153050;--border2:#1c3e65;
+  --accent:#22d3ee;--accent2:#0ea5e9;
+  --green:#34d399;--red:#f87171;--orange:#fbbf24;--cyan:#22d3ee;--pink:#f0abfc;--purple:#818cf8;
+  --text:#e0f2fe;--text2:#7ab8d8;--text3:#345878;
+  --shadow:rgba(0,0,0,.5);
+  --btn-top:rgba(255,255,255,.1);--btn-bot:rgba(255,255,255,.02);
+  --btn-shine:rgba(180,240,255,.2);
+}
+
+/* ══════════════════════════════════════════════
+   BASE RESET & GLOBAL
+   ══════════════════════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--font:'Outfit',sans-serif;--mono:'JetBrains Mono',monospace}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:var(--font);min-height:100vh;overflow-x:hidden;
+  transition:background .3s,color .3s;
+}
+
+/* ══════════════════════════════════════════════
+   HEADER
+   ══════════════════════════════════════════════ */
+.hdr{
+  background:linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
+  border-bottom:1px solid var(--border);
+  height:58px;display:flex;align-items:center;gap:16px;padding:0 20px;
+  position:sticky;top:0;z-index:200;
+  backdrop-filter:blur(12px);
+  box-shadow:0 2px 20px var(--shadow);
+}
+.hdr-brand{
+  display:flex;align-items:center;gap:6px;flex-shrink:0;
+}
+.hdr-brand-nst{
+  font-size:14px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;
+  color:#fff;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  padding:4px 10px;border-radius:8px;
+  box-shadow:0 2px 10px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.2);
+  line-height:1;
+}
+.hdr-brand-sep{
+  font-size:16px;font-weight:300;color:var(--border2);margin:0 2px;
+}
+.hdr-brand-name{
+  font-size:15px;font-weight:700;color:var(--text);letter-spacing:-.2px;
+}
+.hdr-title{font-size:16px;font-weight:700;letter-spacing:-.2px}
+.hdr-sub{font-size:11px;color:var(--text3);margin-top:1px}
+.hdr-space{flex:1}
+.live{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--green);font-weight:700;letter-spacing:1px}
+.live-dot{width:7px;height:7px;background:var(--green);border-radius:50%;animation:blink 2s infinite;box-shadow:0 0 6px var(--green)}
+@keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(.85)}}
+.data-info{font-size:11px;color:var(--text3);border-left:1px solid var(--border);padding-left:16px;margin-left:4px}
+
+/* ══════════════════════════════════════════════
+   THEME PICKER WIDGET
+   ══════════════════════════════════════════════ */
+.theme-picker{
+  display:flex;align-items:center;gap:8px;
+  padding:5px 10px;background:var(--bg3);
+  border:1px solid var(--border);border-radius:20px;
+  margin-right:8px;
+}
+.theme-picker-label{font-size:10px;font-weight:700;letter-spacing:1px;color:var(--text3);text-transform:uppercase;white-space:nowrap}
+.theme-swatches{display:flex;gap:5px;align-items:center}
+.theme-swatch{
+  width:18px;height:18px;border-radius:50%;cursor:pointer;
+  border:2px solid transparent;transition:all .2s;flex-shrink:0;
+  box-shadow:0 2px 6px rgba(0,0,0,.3);
+}
+.theme-swatch:hover{transform:scale(1.2);box-shadow:0 3px 10px rgba(0,0,0,.4)}
+.theme-swatch.active{border-color:var(--text);transform:scale(1.15)}
+.swatch-midnight{background:linear-gradient(135deg,#0f1623,#5b8dee)}
+.swatch-sage{background:linear-gradient(135deg,#0e1a14,#4ade80)}
+.swatch-rose{background:linear-gradient(135deg,#1a0f14,#fb7bb8)}
+.swatch-frost{background:linear-gradient(135deg,#e8eef5,#2563eb)}
+.swatch-amber{background:linear-gradient(135deg,#180f05,#f59e0b)}
+.swatch-ocean{background:linear-gradient(135deg,#050f1a,#22d3ee)}
+
+/* ══════════════════════════════════════════════
+   LAYOUT
+   ══════════════════════════════════════════════ */
+.layout{display:flex;height:calc(100vh - 58px)}
+
+/* ══════════════════════════════════════════════
+   SIDEBAR
+   ══════════════════════════════════════════════ */
+.sidebar{
+  width:210px;background:var(--bg2);border-right:1px solid var(--border);
+  flex-shrink:0;overflow-y:auto;padding:12px 0;
+  transition:background .3s;
+}
+.nav-grp{padding:0 12px;margin-top:16px}
+.nav-grp-label{
+  font-size:9px;font-weight:800;letter-spacing:2.5px;color:var(--text3);
+  text-transform:uppercase;margin-bottom:4px;padding:0 8px;
+}
+.nav-btn{
+  display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:10px;
+  cursor:pointer;color:var(--text2);font-size:13px;font-weight:500;
+  margin-bottom:3px;border:1px solid transparent;
+  transition:all .18s cubic-bezier(.4,0,.2,1);
+  position:relative;overflow:hidden;
+}
+.nav-btn::before{
+  content:'';position:absolute;inset:0;border-radius:10px;
+  background:linear-gradient(135deg,var(--btn-top),var(--btn-bot));
+  opacity:0;transition:opacity .18s;
+}
+.nav-btn:hover{color:var(--text);border-color:var(--border2)}
+.nav-btn:hover::before{opacity:1}
+.nav-btn.on{
+  background:linear-gradient(135deg,rgba(var(--accent-rgb,.15) 0%,rgba(0,0,0,0) 100%));
+  background:color-mix(in srgb, var(--accent) 15%, transparent);
+  color:var(--accent);border-color:color-mix(in srgb, var(--accent) 35%, transparent);
+  box-shadow:0 2px 12px color-mix(in srgb, var(--accent) 15%, transparent),inset 0 1px 0 var(--btn-shine);
+}
+.nav-icon{font-size:15px;width:18px;text-align:center;flex-shrink:0}
+.nav-cnt{
+  margin-left:auto;font-size:10px;
+  background:color-mix(in srgb, var(--accent) 20%, transparent);
+  color:var(--accent);padding:2px 7px;border-radius:10px;font-weight:700;
+}
+
+/* ══════════════════════════════════════════════
+   MAIN CONTENT
+   ══════════════════════════════════════════════ */
+.main{flex:1;overflow-y:auto;padding:22px 26px;transition:background .3s}
+
+/* PAGES */
+.pg{display:none}.pg.on{display:block}
+
+/* PAGE HEADER */
+.pg-hdr{margin-bottom:20px}
+.pg-title{font-size:20px;font-weight:800;display:flex;align-items:center;gap:10px;letter-spacing:-.3px}
+.pg-sub{font-size:12px;color:var(--text3);margin-top:3px}
+
+/* ══════════════════════════════════════════════
+   STAT CARDS
+   ══════════════════════════════════════════════ */
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px}
+.stat{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:16px 18px;cursor:default;
+  transition:transform .2s,border-color .2s,box-shadow .2s;
+  position:relative;overflow:hidden;
+}
+.stat::before{
+  content:'';position:absolute;inset:0;border-radius:14px;
+  background:linear-gradient(145deg,var(--btn-top) 0%,transparent 60%);
+  pointer-events:none;
+}
+.stat:hover{
+  transform:translateY(-3px);
+  border-color:color-mix(in srgb, var(--accent) 40%, transparent);
+  box-shadow:0 8px 24px var(--shadow),0 0 0 1px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+.stat-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1.2px;font-weight:700;margin-bottom:8px}
+.stat-val{font-size:30px;font-weight:800;line-height:1;letter-spacing:-.5px}
+.stat-sub{font-size:11px;color:var(--text3);margin-top:5px}
+.c-blue{color:var(--accent)} .c-green{color:var(--green)} .c-red{color:var(--red)}
+.c-orange{color:var(--orange)} .c-cyan{color:var(--cyan)} .c-purple{color:var(--purple)} .c-pink{color:var(--pink)}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
+
+/* ══════════════════════════════════════════════
+   PANEL
+   ══════════════════════════════════════════════ */
+.panel{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:18px;transition:background .3s;
+  position:relative;overflow:hidden;
+}
+.panel::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--btn-shine),transparent);
+}
+.panel-ttl{font-size:13px;font-weight:700;color:var(--text2);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+
+/* MINI BARS */
+.mbars{display:flex;flex-direction:column;gap:9px}
+.mbar{display:flex;align-items:center;gap:9px}
+.mbar-lbl{font-size:12px;color:var(--text2);min-width:110px;max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mbar-bg{flex:1;height:7px;background:var(--bg3);border-radius:4px;overflow:hidden}
+.mbar-fill{height:100%;border-radius:4px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+.mbar-n{font-size:11px;color:var(--text3);min-width:24px;text-align:right;font-family:var(--mono);font-weight:600}
+
+/* ══════════════════════════════════════════════
+   FILTER BAR
+   ══════════════════════════════════════════════ */
+.fbar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.srch-wrap{position:relative;flex:1;min-width:200px}
+.srch-ico{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:13px;pointer-events:none}
+.srch{
+  width:100%;background:var(--card);border:1px solid var(--border);border-radius:10px;
+  color:var(--text);padding:9px 12px 9px 34px;font-family:var(--font);font-size:13px;
+  outline:none;transition:border-color .2s,box-shadow .2s;
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.1);
+}
+.srch:focus{
+  border-color:var(--accent);
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.1),0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent);
+}
+.srch::placeholder{color:var(--text3)}
+select.fsel{
+  background:var(--card);border:1px solid var(--border);border-radius:10px;
+  color:var(--text2);padding:9px 12px;font-family:var(--font);font-size:13px;
+  cursor:pointer;outline:none;transition:border-color .2s,box-shadow .2s;
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.08);
+}
+select.fsel:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent);
+}
+.fcount{font-size:12px;color:var(--text3);padding:0 4px;white-space:nowrap;font-weight:600}
+
+/* ══════════════════════════════════════════════
+   PILL TABS  — dewy finish
+   ══════════════════════════════════════════════ */
+.ptabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.ptab{
+  padding:6px 16px;border-radius:20px;font-size:12px;font-weight:600;
+  border:1px solid var(--border);cursor:pointer;color:var(--text3);
+  background:var(--card);font-family:var(--font);
+  transition:all .2s cubic-bezier(.4,0,.2,1);
+  box-shadow:0 1px 3px rgba(0,0,0,.15),inset 0 1px 0 var(--btn-top);
+  position:relative;overflow:hidden;
+}
+.ptab::after{
+  content:'';position:absolute;top:0;left:10%;right:10%;height:40%;
+  background:linear-gradient(180deg,var(--btn-shine),transparent);
+  border-radius:0 0 50% 50%;pointer-events:none;
+}
+.ptab:hover{color:var(--text);border-color:var(--border2);box-shadow:0 3px 8px rgba(0,0,0,.2),inset 0 1px 0 var(--btn-shine)}
+.ptab.on{
+  background:linear-gradient(145deg,
+    color-mix(in srgb, var(--accent) 80%, white 20%) 0%,
+    var(--accent) 50%,
+    color-mix(in srgb, var(--accent) 80%, black 10%) 100%);
+  border-color:var(--accent);color:#fff;
+  box-shadow:0 4px 14px color-mix(in srgb, var(--accent) 35%, transparent),
+             inset 0 1px 0 rgba(255,255,255,.3),
+             inset 0 -1px 0 rgba(0,0,0,.15);
+  text-shadow:0 1px 2px rgba(0,0,0,.2);
+}
+
+/* ══════════════════════════════════════════════
+   TABLE
+   ══════════════════════════════════════════════ */
+.tbl-wrap{
+  border:1px solid var(--border);border-radius:14px;overflow:auto;
+  box-shadow:0 4px 16px var(--shadow);
+}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead{background:var(--bg3);position:sticky;top:0;z-index:10}
+thead::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:var(--border)}
+th{
+  padding:11px 14px;text-align:left;font-size:10px;font-weight:800;
+  letter-spacing:1.2px;text-transform:uppercase;color:var(--text3);
+  border-bottom:1px solid var(--border);cursor:pointer;user-select:none;white-space:nowrap;
+  transition:color .15s;
+}
+th:hover{color:var(--accent)}
+td{padding:10px 14px;border-bottom:1px solid color-mix(in srgb, var(--border) 60%, transparent);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:color-mix(in srgb, var(--accent) 4%, transparent)}
+
+/* ══════════════════════════════════════════════
+   BADGES
+   ══════════════════════════════════════════════ */
+.b{
+  display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;
+  font-size:11px;font-weight:700;white-space:nowrap;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 1px 3px rgba(0,0,0,.12);
+}
+.bg{background:color-mix(in srgb, var(--green) 15%, transparent);color:var(--green)}
+.br{background:color-mix(in srgb, var(--red) 15%, transparent);color:var(--red)}
+.bo{background:color-mix(in srgb, var(--orange) 15%, transparent);color:var(--orange)}
+.bb{background:color-mix(in srgb, var(--accent) 15%, transparent);color:var(--accent)}
+.bp{background:color-mix(in srgb, var(--purple) 15%, transparent);color:var(--purple)}
+.bc{background:color-mix(in srgb, var(--cyan) 15%, transparent);color:var(--cyan)}
+.bk{background:rgba(100,116,139,.15);color:var(--text3)}
+
+/* ══════════════════════════════════════════════
+   PROGRESS BAR
+   ══════════════════════════════════════════════ */
+.prog{display:flex;align-items:center;gap:7px}
+.prog-bg{flex:1;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden;min-width:55px;box-shadow:inset 0 1px 2px rgba(0,0,0,.2)}
+.prog-fill{height:100%;border-radius:3px;transition:width .4s cubic-bezier(.4,0,.2,1)}
+.prog-val{font-size:11px;font-weight:700;font-family:var(--mono);min-width:36px;text-align:right}
+
+/* ══════════════════════════════════════════════
+   PAGINATION BUTTONS  — dewy finish
+   ══════════════════════════════════════════════ */
+.pgn{display:flex;align-items:center;gap:6px;margin-top:14px;justify-content:flex-end}
+.pgn-info{font-size:12px;color:var(--text3);margin-right:4px;font-weight:600}
+.pgn-btn{
+  background:linear-gradient(145deg,var(--card2) 0%,var(--card) 100%);
+  border:1px solid var(--border);border-radius:8px;
+  color:var(--text2);padding:6px 12px;cursor:pointer;font-size:12px;
+  font-family:var(--font);font-weight:600;
+  transition:all .2s cubic-bezier(.4,0,.2,1);
+  box-shadow:0 2px 5px rgba(0,0,0,.15),inset 0 1px 0 var(--btn-top),inset 0 -1px 0 rgba(0,0,0,.1);
+  position:relative;overflow:hidden;
+}
+.pgn-btn::after{
+  content:'';position:absolute;top:0;left:15%;right:15%;height:45%;
+  background:linear-gradient(180deg,var(--btn-shine),transparent);
+  border-radius:0 0 50% 50%;pointer-events:none;
+}
+.pgn-btn:hover{
+  border-color:var(--accent);color:var(--accent);
+  box-shadow:0 4px 12px color-mix(in srgb, var(--accent) 20%, transparent),inset 0 1px 0 var(--btn-shine);
+  transform:translateY(-1px);
+}
+.pgn-btn:active{transform:translateY(0);box-shadow:0 1px 3px rgba(0,0,0,.2),inset 0 2px 4px rgba(0,0,0,.1)}
+.pgn-btn.on{
+  background:linear-gradient(145deg,
+    color-mix(in srgb, var(--accent) 80%, white 20%) 0%,
+    var(--accent) 60%,
+    color-mix(in srgb, var(--accent) 85%, black 15%) 100%);
+  border-color:var(--accent);color:#fff;
+  box-shadow:0 4px 14px color-mix(in srgb, var(--accent) 35%, transparent),
+             inset 0 1px 0 rgba(255,255,255,.3),
+             inset 0 -1px 0 rgba(0,0,0,.15);
+  text-shadow:0 1px 2px rgba(0,0,0,.2);
+}
+.pgn-btn:disabled{opacity:.35;cursor:default;pointer-events:none;transform:none}
+
+/* ══════════════════════════════════════════════
+   ACTION BUTTON  — dewy finish
+   ══════════════════════════════════════════════ */
+.act-btn{
+  background:linear-gradient(145deg,
+    color-mix(in srgb, var(--accent) 22%, transparent),
+    color-mix(in srgb, var(--accent) 12%, transparent));
+  border:1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  border-radius:8px;color:var(--accent);padding:5px 12px;cursor:pointer;
+  font-size:11px;font-family:var(--font);font-weight:700;
+  transition:all .2s cubic-bezier(.4,0,.2,1);
+  box-shadow:0 2px 6px rgba(0,0,0,.12),inset 0 1px 0 rgba(255,255,255,.15);
+  position:relative;overflow:hidden;
+}
+.act-btn::after{
+  content:'';position:absolute;top:0;left:10%;right:10%;height:45%;
+  background:linear-gradient(180deg,rgba(255,255,255,.18),transparent);
+  border-radius:0 0 50% 50%;pointer-events:none;
+}
+.act-btn:hover{
+  background:var(--accent);color:#fff;
+  box-shadow:0 4px 14px color-mix(in srgb, var(--accent) 40%, transparent),
+             inset 0 1px 0 rgba(255,255,255,.3);
+  transform:translateY(-1px);
+}
+.act-btn:active{transform:translateY(0)}
+
+/* ══════════════════════════════════════════════
+   MODAL
+   ══════════════════════════════════════════════ */
+.modal-bg{
+  position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:999;
+  display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .25s;
+}
+.modal-bg.on{opacity:1;pointer-events:all}
+.modal{
+  background:var(--bg2);border:1px solid var(--border2);border-radius:18px;
+  width:700px;max-width:96vw;max-height:90vh;overflow-y:auto;padding:26px;
+  transform:scale(.96) translateY(12px);
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 24px 60px rgba(0,0,0,.5),0 0 0 1px var(--btn-shine);
+}
+.modal-bg.on .modal{transform:scale(1) translateY(0)}
+.modal-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px}
+.modal-name{font-size:20px;font-weight:800;letter-spacing:-.3px}
+.modal-meta{font-size:12px;color:var(--text3);margin-top:4px}
+.modal-x{
+  background:linear-gradient(145deg,var(--bg3),var(--card));
+  border:1px solid var(--border);color:var(--text2);
+  border-radius:10px;padding:6px 13px;cursor:pointer;font-size:16px;
+  font-family:var(--font);font-weight:600;
+  transition:all .18s;
+  box-shadow:0 2px 6px rgba(0,0,0,.15),inset 0 1px 0 var(--btn-top);
+}
+.modal-x:hover{color:var(--red);border-color:color-mix(in srgb, var(--red) 40%, transparent);transform:scale(1.05)}
+.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* ══════════════════════════════════════════════
+   MISC UTILITIES
+   ══════════════════════════════════════════════ */
+.mono{font-family:var(--mono)}
+.empty{text-align:center;padding:40px 20px;color:var(--text3)}
+.empty-ico{font-size:36px;margin-bottom:10px}
+.empty-msg{font-size:13px}
+.lnk{color:var(--accent);text-decoration:none;cursor:pointer;font-weight:600}
+.lnk:hover{text-decoration:underline}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--text3)}
+
+/* Smooth theme transition */
+*{transition:background-color .25s, border-color .25s, color .15s}
+a,button,input,select{transition:all .2s cubic-bezier(.4,0,.2,1) !important}
+
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-brand">
+    <span class="hdr-brand-nst">NST</span><span class="hdr-brand-sep">·</span><span class="hdr-brand-name">ADYPU Campus Dashboard</span>
+  </div>
+  <div>
+    <div class="hdr-sub" style="font-size:12px;color:var(--text3)">Newton School of Technology · Batch 2024–28</div>
+  </div>
+  <div class="hdr-space"></div>
+<div class="theme-picker">
+    <span class="theme-picker-label">🎨 Theme</span>
+    <div class="theme-swatches">
+      <div class="theme-swatch swatch-midnight active" title="Midnight Slate" onclick="setTheme('midnight',this)"></div>
+      <div class="theme-swatch swatch-sage" title="Sage Forest" onclick="setTheme('sage',this)"></div>
+      <div class="theme-swatch swatch-rose" title="Rose Quartz" onclick="setTheme('rose',this)"></div>
+      <div class="theme-swatch swatch-frost" title="Arctic Frost" onclick="setTheme('frost',this)"></div>
+      <div class="theme-swatch swatch-amber" title="Amber Dusk" onclick="setTheme('amber',this)"></div>
+      <div class="theme-swatch swatch-ocean" title="Ocean Depth" onclick="setTheme('ocean',this)"></div>
+    </div>
+  </div>
+  <div class="data-info" id="data-info">Loading…</div>
+  <div class="live"><div class="live-dot"></div>LIVE DATA</div>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="nav-grp">
+      <div class="nav-grp-label">Overview</div>
+      <div class="nav-btn on" id="nav-overview" onclick="nav('overview')">
+        <span class="nav-icon">🏠</span>Overview
+      </div>
+    </div>
+    <div class="nav-grp">
+      <div class="nav-grp-label">Students</div>
+      <div class="nav-btn" id="nav-students" onclick="nav('students')">
+        <span class="nav-icon">👤</span>All Students
+        <span class="nav-cnt" id="cnt-students">0</span>
+      </div>
+      <div class="nav-btn" id="nav-attendance" onclick="nav('attendance')">
+        <span class="nav-icon">📊</span>Attendance
+      </div>
+    </div>
+    <div class="nav-grp">
+      <div class="nav-grp-label">Placements</div>
+      <div class="nav-btn" id="nav-placements" onclick="nav('placements')">
+        <span class="nav-icon">🏢</span>Placed Students
+        <span class="nav-cnt" id="cnt-placed">0</span>
+      </div>
+      <div class="nav-btn" id="nav-companies" onclick="nav('companies')">
+        <span class="nav-icon">🏭</span>Companies
+        <span class="nav-cnt" id="cnt-companies">0</span>
+      </div>
+    </div>
+    <div class="nav-grp">
+      <div class="nav-grp-label">Programs</div>
+      <div class="nav-btn" id="nav-icpc" onclick="nav('icpc')">
+        <span class="nav-icon">💻</span>ICPC / CP
+        <span class="nav-cnt" id="cnt-icpc">0</span>
+      </div>
+      <div class="nav-btn" id="nav-opensource" onclick="nav('opensource')">
+        <span class="nav-icon">🌐</span>Open Source
+        <span class="nav-cnt" id="cnt-oss">0</span>
+      </div>
+    </div>
+    <div class="nav-grp">
+      <div class="nav-grp-label">Interactions</div>
+      <div class="nav-btn" id="nav-oneonone" onclick="nav('oneonone')">
+        <span class="nav-icon">🤝</span>1:1 Sessions
+        <span class="nav-cnt" id="cnt-1on1">0</span>
+      </div>
+      <div class="nav-btn" id="nav-focused" onclick="nav('focused')">
+        <span class="nav-icon">🎯</span>Focus Group
+        <span class="nav-cnt" id="cnt-focused">0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main">
+
+    <!-- ── OVERVIEW ── -->
+    <div class="pg on" id="pg-overview">
+      <div class="pg-hdr">
+        <div class="pg-title">🏠 Campus Overview</div>
+        <div class="pg-sub">Real-time snapshot of NST ADYPU · Batch 2024–28</div>
+      </div>
+      <div class="stats" id="ov-stats"></div>
+      <div class="g2">
+        <div class="panel"><div class="panel-ttl">🏢 Top Hiring Companies</div><div class="mbars" id="ov-companies"></div></div>
+        <div class="panel"><div class="panel-ttl">🎯 Internship Status</div><div class="mbars" id="ov-int-status"></div></div>
+      </div>
+      <div class="g3">
+        <div class="panel"><div class="panel-ttl">📚 Batch Split</div><div class="mbars" id="ov-batch"></div></div>
+        <div class="panel"><div class="panel-ttl">🏅 Cohort Split</div><div class="mbars" id="ov-cohort"></div></div>
+        <div class="panel"><div class="panel-ttl">📄 Resume Status</div><div class="mbars" id="ov-resume"></div></div>
+      </div>
+      <div class="g2">
+        <div class="panel">
+          <div class="panel-ttl">⚠️ Critical Attendance (Below 75%)</div>
+          <div id="ov-low-att"></div>
+        </div>
+        <div class="panel"><div class="panel-ttl">💰 Stipend Ranges</div><div class="mbars" id="ov-stipend"></div></div>
+      </div>
+    </div>
+
+    <!-- ── STUDENTS ── -->
+    <div class="pg" id="pg-students">
+      <div class="pg-hdr">
+        <div class="pg-title">👤 All Students</div>
+        <div class="pg-sub">Click any student name to view their full profile</div>
+      </div>
+      <div class="fbar">
+        <div class="srch-wrap">
+          <span class="srch-ico">🔍</span>
+          <input class="srch" id="s-q" placeholder="Search name, email, enrollment…" oninput="renderStudents(1)">
+        </div>
+        <select class="fsel" id="s-batch" onchange="renderStudents(1)">
+          <option value="">All Batches</option>
+          <option>Ramanujan</option><option>Turing</option><option>Hopper</option>
+        </select>
+        <select class="fsel" id="s-cohort" onchange="renderStudents(1)">
+          <option value="">All Cohorts</option>
+          <option>Top</option><option>Upper Medium</option><option>Lower Medium</option><option>Bottom</option><option>Bottom Most</option>
+        </select>
+        <select class="fsel" id="s-mentor" onchange="renderStudents(1)"><option value="">All Mentors</option></select>
+        <select class="fsel" id="s-int" onchange="renderStudents(1)">
+          <option value="">All Statuses</option>
+          <option>Placed</option><option>External Offer</option><option>Already working</option><option>entrepreneurship</option><option>Not Placed</option>
+        </select>
+        <span class="fcount" id="s-cnt"></span>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr>
+            <th onclick="srt('s','name')">Name ↕</th>
+            <th onclick="srt('s','enroll')">Enrollment</th>
+            <th onclick="srt('s','batch')">Batch ↕</th>
+            <th onclick="srt('s','cohort')">Cohort ↕</th>
+            <th onclick="srt('s','mentor')">Mentor ↕</th>
+            <th onclick="srt('s','resume')">Resume</th>
+            <th onclick="srt('s','att')">Attendance ↕</th>
+            <th onclick="srt('s','int_status')">Int. Status</th>
+            <th>Profile</th>
+          </tr></thead>
+          <tbody id="s-tbody"></tbody>
+        </table>
+      </div>
+      <div class="pgn" id="s-pgn"></div>
+    </div>
+
+    <!-- ── ATTENDANCE ── -->
+    <div class="pg" id="pg-attendance">
+      <div class="pg-hdr">
+        <div class="pg-title">📊 Attendance Monitor</div>
+        <div class="pg-sub">Filter students by attendance threshold</div>
+      </div>
+      <div class="ptabs" id="att-tabs">
+        <div class="ptab on" onclick="setAttF('all',this)">All Students</div>
+        <div class="ptab" onclick="setAttF('c50',this)">🔴 Below 50%</div>
+        <div class="ptab" onclick="setAttF('c75',this)">🟠 Below 75%</div>
+        <div class="ptab" onclick="setAttF('g75',this)">🟢 75% and Above</div>
+        <div class="ptab" onclick="setAttF('g90',this)">⭐ Above 90%</div>
+      </div>
+      <div class="fbar">
+        <div class="srch-wrap">
+          <span class="srch-ico">🔍</span>
+          <input class="srch" id="a-q" placeholder="Search student name…" oninput="renderAtt(1)">
+        </div>
+        <select class="fsel" id="a-batch" onchange="renderAtt(1)">
+          <option value="">All Batches</option>
+          <option>Ramanujan</option><option>Turing</option><option>Hopper</option>
+        </select>
+        <select class="fsel" id="a-mentor" onchange="renderAtt(1)"><option value="">All Mentors</option></select>
+        <span class="fcount" id="a-cnt"></span>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr>
+            <th onclick="srt('a','name')">Name ↕</th>
+            <th>Enrollment</th>
+            <th onclick="srt('a','batch')">Batch ↕</th>
+            <th onclick="srt('a','mentor')">Mentor ↕</th>
+            <th onclick="srt('a','att')">Avg Attendance ↕</th>
+            <th>Risk Level</th>
+            <th>Actions</th>
+          </tr></thead>
+          <tbody id="a-tbody"></tbody>
+        </table>
+      </div>
+      <div class="pgn" id="a-pgn"></div>
+    </div>
+
+    <!-- ── PLACEMENTS ── -->
+    <div class="pg" id="pg-placements">
+      <div class="pg-hdr">
+        <div class="pg-title">🏢 Placed Students</div>
+        <div class="pg-sub">All students who have secured internships/placements</div>
+      </div>
+      <div class="fbar">
+        <div class="srch-wrap">
+          <span class="srch-ico">🔍</span>
+          <input class="srch" id="p-q" placeholder="Search name or company…" oninput="renderPlaced(1)">
+        </div>
+        <select class="fsel" id="p-company" onchange="renderPlaced(1)"><option value="">All Companies</option></select>
+        <select class="fsel" id="p-sem" onchange="renderPlaced(1)">
+          <option value="">All Semesters</option><option>5</option><option>7</option><option>Summer</option>
+        </select>
+        <select class="fsel" id="p-campus" onchange="renderPlaced(1)">
+          <option value="">All Campuses</option><option>ADYPU</option><option>RU</option>
+        </select>
+        <span class="fcount" id="p-cnt"></span>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr>
+            <th onclick="srt('p','name')">Name ↕</th>
+            <th onclick="srt('p','company')">Company ↕</th>
+            <th>Role</th>
+            <th onclick="srt('p','stipend')">Stipend ↕</th>
+            <th onclick="srt('p','sem')">Semester ↕</th>
+            <th onclick="srt('p','campus')">Campus</th>
+            <th onclick="srt('p','date')">Date ↕</th>
+            <th>OL Status</th>
+          </tr></thead>
+          <tbody id="p-tbody"></tbody>
+        </table>
+      </div>
+      <div class="pgn" id="p-pgn"></div>
+    </div>
+
+    <!-- ── COMPANIES ── -->
+    <div class="pg" id="pg-companies">
+      <div class="pg-hdr">
+        <div class="pg-title">🏭 Company Insights</div>
+        <div class="pg-sub">All hiring companies with placement statistics</div>
+      </div>
+      <div class="fbar">
+        <div class="srch-wrap">
+          <span class="srch-ico">🔍</span>
+          <input class="srch" id="co-q" placeholder="Search company name…" oninput="renderCompanies()">
+        </div>
+        <span class="fcount" id="co-cnt"></span>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr>
+            <th onclick="srt('co','name')">Company ↕</th>
+            <th onclick="srt('co','count')">Placed ↕</th>
+            <th onclick="srt('co','avg_stipend')">Avg Stipend ↕</th>
+            <th onclick="srt('co','max_stipend')">Max Stipend ↕</th>
+            <th>Roles</th>
+            <th>Students</th>
+          </tr></thead>
+          <tbody id="co-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── ICPC ── -->
+    <div class="pg" id="pg-icpc">
+      <div class="pg-hdr">
+        <div class="pg-title">💻 ICPC / Competitive Programming</div>
+        <div class="pg-sub">Student performance in competitive programming</div>
+      </div>
+      <div class="fbar">
+        <div class="srch-wrap">
+          <span class="srch-ico">🔍</span>
+          <input class="srch" id="ic-q" placeholder="Search student name or CF handle…" oninput="renderICPC(1)">
+        </div>
+        <select class="fsel" id="ic-batch" onchange="renderICPC(1)"><option value="">All Batches</option></select>
+        <select class="fsel" id="ic-skill" onchange="renderICPC(1)">
+          <option value="">All Skill Levels</option><option>High</option><option>Medium</option><option>Low</option>
+        </select>
+        <select class="fsel" id="ic-sel" onchange="renderICPC(1)">
+          <option value="">All</option><option value="yes">Selected ✓</option><option value="no">Not Selected</option>
+        </select>
+        <span class="fcount" id="ic-cnt"></span>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr>
+            <th onclick="srt('ic','name')">Name ↕</th>
+            <th>Enrollment</th>
+            <th onclick="srt('ic','batch')">Batch ↕</th>
+            <th onclick="srt('ic','mentor')">Mentor ↕</th>
+            <th onclick="srt('ic','cf_rating')">CF Rating ↕</th>
+            <th onclick="srt('ic','problems')">Problems ↕</th>
+            <th onclick="srt('ic','percentile')">Percentile ↕</th>
+            <th onclick="srt('ic','att')">Att. ↕</th>
+            <th>Selected</th>
+          </tr></thead>
+          <tbody id="ic-tbody"></tbody>
+        </table>
+      </div>
+      <div class="pgn" id="ic-pgn"></div>
+    </div>
+
+    <!-- ── OPEN SOURCE ── -->
+    <div class="pg" id="pg-opensource">
+      <div class="pg-hdr">
+        <div class="pg-title">🌐 Open Source Program</div>
+        <div class="pg-sub">Student contributions to open source projects</div>
+      </div>
+      <div class="fbar">
+        <div class="srch-wrap">
+          <span class="srch-ico">🔍</span>
+          <input class="srch" id="os-q" placeholder="Search name, GitHub, or repository…" oninput="renderOSS(1)">
+        </div>
+        <select class="fsel" id="os-campus" onchange="renderOSS(1)">
+          <option value="">All Campuses</option><option>ADYPU</option><option>RU</option>
+        </select>
+        <select class="fsel" id="os-flags" onchange="renderOSS(1)">
+          <option value="">All Students</option><option value="red">Has Red Flags ⚠️</option><option value="clean">No Red Flags ✓</option>
+        </select>
+        <span class="fcount" id="os-cnt"></span>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr>
+            <th onclick="srt('os','name')">Name ↕</th>
+            <th>GitHub</th>
+            <th onclick="srt('os','campus')">Campus</th>
+            <th onclick="srt('os','year')">Year ↕</th>
+            <th>Repository / Org</th>
+            <th onclick="srt('os','merged')">Merged PRs ↕</th>
+            <th onclick="srt('os','open_prs')">Open PRs ↕</th>
+            <th onclick="srt('os','community')">Community ↕</th>
+            <th>Red Flags</th>
+          </tr></thead>
+          <tbody id="os-tbody"></tbody>
+        </table>
+      </div>
+      <div class="pgn" id="os-pgn"></div>
+    </div>
+
+
+    <!-- ── 1:1 SESSIONS ── -->
+    <div class="pg" id="pg-oneonone">
+      <div class="pg-hdr">
+        <div class="pg-title">🤝 1:1 Sessions</div>
+        <div class="pg-sub">Individual student interaction records — Sem 2 & Sem 4</div>
+      </div>
+      <div class="stats" id="oo-stats" style="grid-template-columns:repeat(4,1fr)"></div>
+      <div class="g2" style="margin-bottom:16px">
+        <div class="panel"><div class="panel-ttl">📊 Overall Risk Distribution</div><div class="mbars" id="oo-risk-bars"></div></div>
+        <div class="panel"><div class="panel-ttl">🏆 2×2 Effort vs Performance Matrix</div><div class="mbars" id="oo-matrix-bars"></div></div>
+      </div>
+      <div class="ptabs" id="oo-sem-tabs">
+        <div class="ptab on" onclick="setOOSem('all',this)">All Semesters</div>
+        <div class="ptab" onclick="setOOSem('Sem 4',this)">Sem 4</div>
+        <div class="ptab" onclick="setOOSem('Sem 2',this)">Sem 2</div>
+        <div class="ptab" onclick="setOOSem('sessioned',this)">Has Session Only</div>
+      </div>
+      <div class="fbar">
+        <div class="srch-wrap">
+          <span class="srch-ico">🔍</span>
+          <input class="srch" id="oo-q" placeholder="Search student name…" oninput="renderOO(1)">
+        </div>
+        <select class="fsel" id="oo-batch" onchange="renderOO(1)">
+          <option value="">All Batches</option>
+          <option>Ramanujan</option><option>Turing</option><option>Hopper</option>
+        </select>
+        <select class="fsel" id="oo-risk" onchange="renderOO(1)">
+          <option value="">All Risk Levels</option>
+          <option value="No Risk">🟢 No Risk</option>
+          <option value="Critical Risk">🔴 Critical Risk</option>
+        </select>
+        <select class="fsel" id="oo-effort" onchange="renderOO(1)">
+          <option value="">All Effort Levels</option>
+          <option value="High Effort">High Effort</option>
+          <option value="Low Effort">Low Effort</option>
+        </select>
+        <span class="fcount" id="oo-cnt"></span>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr>
+            <th onclick="srt('oo','name')">Name ↕</th>
+            <th onclick="srt('oo','batch')">Batch ↕</th>
+            <th>Cohort</th>
+            <th onclick="srt('oo','date')">Session Date ↕</th>
+            <th>Type</th>
+            <th onclick="srt('oo','avg_conf')">Avg Confidence ↕</th>
+            <th onclick="srt('oo','hrs')">Weekly Hrs ↕</th>
+            <th onclick="srt('oo','effort')">Effort ↕</th>
+            <th onclick="srt('oo','risk')">Risk Status ↕</th>
+            <th>2×2 Matrix</th>
+          </tr></thead>
+          <tbody id="oo-tbody"></tbody>
+        </table>
+      </div>
+      <div class="pgn" id="oo-pgn"></div>
+    </div>
+
+    <!-- ── FOCUSED GROUP ── -->
+    <div class="pg" id="pg-focused">
+      <div class="pg-hdr">
+        <div class="pg-title">🎯 Focus Group Sessions</div>
+        <div class="pg-sub">Per-mentor focused group interaction notes and student tracking</div>
+      </div>
+      <div class="fbar">
+        <div class="srch-wrap">
+          <span class="srch-ico">🔍</span>
+          <input class="srch" id="fg-q" placeholder="Search student name or notes…" oninput="renderFocused(1)">
+        </div>
+        <select class="fsel" id="fg-mentor" onchange="renderFocused(1)">
+          <option value="">All Mentors</option>
+        </select>
+        <select class="fsel" id="fg-sem" onchange="renderFocused(1)">
+          <option value="">All Semesters</option>
+        </select>
+        <select class="fsel" id="fg-cohort" onchange="renderFocused(1)">
+          <option value="">All Cohorts</option>
+          <option>Top</option><option>Bottom</option><option>Middle Cohort</option><option>Bottom Most</option>
+        </select>
+        <span class="fcount" id="fg-cnt"></span>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr>
+            <th onclick="srt('fg','name')">Name ↕</th>
+            <th onclick="srt('fg','cohort')">Cohort ↕</th>
+            <th onclick="srt('fg','mentor')">Mentor ↕</th>
+            <th onclick="srt('fg','sem')">Sem ↕</th>
+            <th>1:1 Notes</th>
+            <th>Follow-up Notes</th>
+          </tr></thead>
+          <tbody id="fg-tbody"></tbody>
+        </table>
+      </div>
+      <div class="pgn" id="fg-pgn"></div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /layout -->
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal-bg" onclick="closeModal(event)">
+  <div class="modal" id="modal-body"></div>
+</div>
+
+<!-- DATA EMBEDDED HERE -->
+<script>
+// ══════════════════════════════════════════════════════════════
+// LIVE DATA FETCHER — replaces embedded JSON
+// Set APPS_SCRIPT_URL to your deployed Google Apps Script URL
+// ══════════════════════════════════════════════════════════════
+var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyDXpNPcU09HJHfJZwyxr3e4tYbCo5DDHw46fpqTaOUIoaGa2KEo99UqjaopZbfpfxbaw/exec';
+
+// Fallback: if URL not set, show setup instructions
+function isLiveMode() {
+  return APPS_SCRIPT_URL && APPS_SCRIPT_URL !== 'YOUR_APPS_SCRIPT_URL_HERE';
+}
+
+function showLoader(msg) {
+  var main = document.querySelector('.main');
+  if (main) main.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;gap:20px">'
+    + '<div style="width:52px;height:52px;border:4px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite"></div>'
+    + '<div style="font-size:15px;font-weight:600;color:var(--text2)">' + (msg || 'Loading live data…') + '</div>'
+    + '<div style="font-size:12px;color:var(--text3)">Fetching from Google Sheets</div>'
+    + '</div><style>@keyframes spin{to{transform:rotate(360deg)}}</style>';
+}
+
+function showSetupGuide() {
+  var main = document.querySelector('.main');
+  if (!main) return;
+  main.innerHTML = '<div style="max-width:640px;margin:60px auto;padding:32px;background:var(--card);border:1px solid var(--border);border-radius:16px">'
+    + '<div style="font-size:24px;margin-bottom:8px">⚙️ Setup Required</div>'
+    + '<div style="font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:24px">To connect this dashboard to your live Google Spreadsheet, follow these steps:</div>'
+    + '<div style="display:flex;flex-direction:column;gap:14px">'
+    + step(1, 'Open your Google Spreadsheet', 'The Master_Sheet-_2024-28 file in Google Drive')
+    + step(2, 'Open Apps Script', 'Go to <strong>Extensions → Apps Script</strong>')
+    + step(3, 'Paste the API script', 'Delete existing code and paste the contents of <code>NST_Dashboard_API.gs</code>')
+    + step(4, 'Deploy as Web App', 'Click <strong>Deploy → New deployment</strong><br>Type: <strong>Web app</strong><br>Execute as: <strong>Me</strong><br>Who has access: <strong>Anyone</strong>')
+    + step(5, 'Copy the Web App URL', 'You'll see a URL like <code>https://script.google.com/macros/s/.../exec</code>')
+    + step(6, 'Update this HTML file', 'Open <code>NST_ADYPU_Dashboard_Live.html</code> in a text editor<br>Find <code>APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE'</code><br>Replace with your URL and save')
+    + step(7, 'Host the HTML file', 'Upload to GitHub Pages, Netlify, Vercel, or any static host<br>Or just open locally — it works from your desktop too!')
+    + '</div>'
+    + '<div style="margin-top:24px;padding:14px;background:var(--bg3);border-radius:10px;font-size:12px;color:var(--text3)">💡 The dashboard auto-refreshes every 5 minutes. Data is cached in Google Apps Script for speed.</div>'
+    + '</div>';
+  function step(n, title, desc) {
+    return '<div style="display:flex;gap:14px;align-items:flex-start;padding:14px;background:var(--bg3);border-radius:10px">'
+      + '<div style="width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0">' + n + '</div>'
+      + '<div><div style="font-weight:700;margin-bottom:4px">' + title + '</div>'
+      + '<div style="font-size:12px;color:var(--text3);line-height:1.6">' + desc + '</div></div>'
+      + '</div>';
+  }
+}
+
+function showError(msg) {
+  var main = document.querySelector('.main');
+  if (main) main.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;gap:16px">'
+    + '<div style="font-size:36px">⚠️</div>'
+    + '<div style="font-size:15px;font-weight:700;color:var(--red)">Failed to load data</div>'
+    + '<div style="font-size:13px;color:var(--text3);max-width:480px;text-align:center;line-height:1.6">' + msg + '</div>'
+    + '<button onclick="fetchData()" style="margin-top:8px;padding:10px 24px;background:var(--accent);color:#fff;border:none;border-radius:10px;cursor:pointer;font-size:14px;font-weight:700">↺ Retry</button>'
+    + '</div>';
+}
+
+function fetchData() {
+  showLoader('Connecting to Google Sheets…');
+  var url = APPS_SCRIPT_URL + '?action=all&bust=' + Date.now();
+  fetch(url)
+    .then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then(function(resp) {
+      if (resp.status !== 'ok') throw new Error(resp.message || 'API error');
+      DB = resp.data;
+      if (!DB || !DB.students) throw new Error('Invalid data from API');
+      // Update header info
+      var info = document.getElementById('data-info');
+      if (info) info.textContent = DB.students.length + ' students · ' + DB.placed.length + ' placed · Live';
+      var live = document.querySelector('.live-dot');
+      if (live) live.style.background = 'var(--green)';
+      init();
+      // Auto-refresh every 5 minutes
+      setTimeout(fetchData, 5 * 60 * 1000);
+    })
+    .catch(function(err) {
+      showError('Could not reach the Google Apps Script API.<br><br>'
+        + '<strong>Error:</strong> ' + err.message + '<br><br>'
+        + 'Check that your Apps Script is deployed and the URL is correct.<br>'
+        + 'Also verify "Who has access" is set to <strong>Anyone</strong>.');
+    });
+}
+
+window.onload = function() {
+  // Apply saved theme
+  var saved = 'midnight';
+  try { saved = localStorage.getItem('nst-theme') || 'midnight'; } catch(e) {}
+  document.documentElement.setAttribute('data-theme', saved);
+  var sw = document.querySelector('.swatch-' + saved);
+  if (sw) { document.querySelectorAll('.theme-swatch').forEach(function(s){ s.classList.remove('active'); }); sw.classList.add('active'); }
+
+  if (!isLiveMode()) {
+    showSetupGuide();
+  } else {
+    fetchData();
+  }
+};
+</script>
+
+<script>
+// ── THEME SWITCHER ────────────────────────────────────────────────────────────
+function setTheme(name, el) {
+  document.documentElement.setAttribute('data-theme', name);
+  document.querySelectorAll('.theme-swatch').forEach(function(s){ s.classList.remove('active'); });
+  if (el) el.classList.add('active');
+  try { localStorage.setItem('nst-theme', name); } catch(e){}
+}
+(function(){
+  var saved = 'midnight';
+  try { saved = localStorage.getItem('nst-theme') || 'midnight'; } catch(e){}
+  document.documentElement.setAttribute('data-theme', saved);
+  window.addEventListener('DOMContentLoaded', function(){
+    var sw = document.querySelector('.swatch-' + saved);
+    if (sw) { document.querySelectorAll('.theme-swatch').forEach(function(s){ s.classList.remove('active'); }); sw.classList.add('active'); }
+  });
+})();
+
+// ── Bootstrap ────────────────────────────────────────────────────────────────
+var SORTS = {};
+var ATT_F = 'all';
+const PS = 50;
+
+// onload is handled by the live fetch script above
+
+function init() {
+  // Set sidebar counts
+  document.getElementById('cnt-students').textContent = DB.students.length;
+  document.getElementById('cnt-placed').textContent = DB.placed.length;
+  document.getElementById('cnt-companies').textContent = DB.companies.length;
+  document.getElementById('cnt-icpc').textContent = DB.icpc.length;
+  document.getElementById('cnt-oss').textContent = DB.oss.length;
+  document.getElementById('cnt-1on1').textContent = DB.oneonone ? DB.oneonone.length : 0;
+  document.getElementById('cnt-focused').textContent = DB.focused ? DB.focused.length : 0;
+  document.getElementById('data-info').textContent = DB.students.length + ' students · ' + DB.placed.length + ' placed · ' + (DB.oneonone?DB.oneonone.filter(function(r){return r.date;}).length:0) + ' sessions';
+
+  // Populate mentor filters
+  var mentors = [...new Set(DB.students.map(s=>s.mentor).filter(Boolean))].sort();
+  ['s-mentor','a-mentor'].forEach(function(id) {
+    var sel = document.getElementById(id);
+    mentors.forEach(function(m) {
+      var o = document.createElement('option'); o.value = o.text = m; sel.appendChild(o);
+    });
+  });
+
+  // Populate company filter
+  var coSel = document.getElementById('p-company');
+  DB.companies.forEach(function(c) {
+    var o = document.createElement('option'); o.value = o.text = c.name; coSel.appendChild(o);
+  });
+
+  // Populate ICPC batch filter
+  var batches = [...new Set(DB.icpc.map(s=>s.batch).filter(Boolean))].sort();
+  var icSel = document.getElementById('ic-batch');
+  batches.forEach(function(b) {
+    var o = document.createElement('option'); o.value = o.text = b; icSel.appendChild(o);
+  });
+
+  renderOverview();
+  renderStudents(1);
+  renderAtt(1);
+  renderPlaced(1);
+  renderCompanies();
+  renderICPC(1);
+  renderOSS(1);
+  renderOOStats();
+  renderOO(1);
+  initFocusedFilters();
+  renderFocused(1);
+}
+
+// ── Navigation ────────────────────────────────────────────────────────────────
+function nav(id) {
+  document.querySelectorAll('.pg').forEach(function(p){ p.classList.remove('on'); });
+  document.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.remove('on'); });
+  document.getElementById('pg-' + id).classList.add('on');
+  document.getElementById('nav-' + id).classList.add('on');
+}
+
+// ── Sort ─────────────────────────────────────────────────────────────────────
+function srt(ctx, field) {
+  var prev = SORTS[ctx];
+  SORTS[ctx] = { f: field, d: (prev && prev.f === field && prev.d === 'asc') ? 'desc' : 'asc' };
+  if (ctx==='s') renderStudents(1);
+  else if (ctx==='a') renderAtt(1);
+  else if (ctx==='p') renderPlaced(1);
+  else if (ctx==='co') renderCompanies();
+  else if (ctx==='ic') renderICPC(1);
+  else if (ctx==='os') renderOSS(1);
+}
+function doSort(arr, ctx) {
+  var s = SORTS[ctx]; if (!s) return arr;
+  return arr.slice().sort(function(a,b) {
+    var av = a[s.f], bv = b[s.f];
+    if (av == null || av === '' || av === 'None' || av === 'nan') av = s.d==='asc' ? '\uFFFF' : '';
+    if (bv == null || bv === '' || bv === 'None' || bv === 'nan') bv = s.d==='asc' ? '\uFFFF' : '';
+    if (!isNaN(av) && !isNaN(bv)) return s.d==='asc' ? av-bv : bv-av;
+    return s.d==='asc' ? String(av).localeCompare(String(bv)) : String(bv).localeCompare(String(av));
+  });
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function f(v) { return (!v || v==='None' || v==='nan' || v==='null') ? '—' : v; }
+function finr(v) { if (!v || isNaN(v) || v<=0) return '—'; return '₹'+Number(v).toLocaleString('en-IN'); }
+function pct(v,col) {
+  var color = v<50?'var(--red)':v<75?'var(--orange)':v>=90?'var(--green)':'var(--cyan)';
+  return '<div class="prog"><div class="prog-bg"><div class="prog-fill" style="width:'+Math.min(v,100)+'%;background:'+color+'"></div></div><div class="prog-val" style="color:'+color+'">'+v.toFixed(1)+'%</div></div>';
+}
+function badge(txt,cls){ return txt?'<span class="b '+cls+'">'+txt+'</span>':'<span class="b bk">—</span>'; }
+function mbar(lbl,n,max,col){
+  var w = max>0?Math.round(n/max*100):0;
+  return '<div class="mbar"><div class="mbar-lbl">'+lbl+'</div><div class="mbar-bg"><div class="mbar-fill" style="width:'+w+'%;background:'+col+'"></div></div><div class="mbar-n">'+n+'</div></div>';
+}
+
+// ── Pagination ────────────────────────────────────────────────────────────────
+function renderPgn(elId, total, cur, fn) {
+  var pages = Math.ceil(total/PS);
+  var el = document.getElementById(elId);
+  if (!el) return;
+  if (pages<=1){ el.innerHTML=''; return; }
+  var h = '<span class="pgn-info">Page '+cur+' of '+pages+'</span>';
+  h += '<button class="pgn-btn" onclick="'+fn+'('+Math.max(1,cur-1)+')" '+(cur===1?'disabled':'')+'>‹ Prev</button>';
+  var start = Math.max(1, cur-2), end = Math.min(pages, cur+2);
+  for(var i=start;i<=end;i++) h += '<button class="pgn-btn'+(i===cur?' on':'')+'" onclick="'+fn+'('+i+')">'+i+'</button>';
+  h += '<button class="pgn-btn" onclick="'+fn+'('+Math.min(pages,cur+1)+')" '+(cur===pages?'disabled':'')+'>Next ›</button>';
+  el.innerHTML = h;
+}
+
+// ── OVERVIEW ─────────────────────────────────────────────────────────────────
+function renderOverview() {
+  var st = DB.students, pl = DB.placed;
+  var b50 = st.filter(function(s){ return s.has_att && s.att<50; }).length;
+  var b75 = st.filter(function(s){ return s.has_att && s.att<75; }).length;
+
+  document.getElementById('ov-stats').innerHTML = [
+    '<div class="stat"><div class="stat-lbl">Total Students</div><div class="stat-val c-blue">'+st.length+'</div><div class="stat-sub">ADYPU Campus</div></div>',
+    '<div class="stat"><div class="stat-lbl">Placed</div><div class="stat-val c-green">'+pl.length+'</div><div class="stat-sub">'+pl.filter(function(p){return p.campus==='ADYPU';}).length+' ADYPU · '+pl.filter(function(p){return p.campus==='RU';}).length+' RU</div></div>',
+    '<div class="stat"><div class="stat-lbl">Below 75% Att.</div><div class="stat-val c-orange">'+b75+'</div><div class="stat-sub">'+b50+' critical (&lt;50%)</div></div>',
+    '<div class="stat"><div class="stat-lbl">Companies</div><div class="stat-val c-cyan">'+DB.companies.length+'</div><div class="stat-sub">Hiring partners</div></div>',
+    '<div class="stat"><div class="stat-lbl">Open Source</div><div class="stat-val c-pink">'+DB.oss.length+'</div><div class="stat-sub">Students enrolled</div></div>',
+  ].join('');
+
+  var palette = ['var(--accent)','var(--cyan)','var(--green)','var(--pink)','var(--orange)','var(--purple)','#34d399','#f87171','#fbbf24','#60a5fa'];
+  var topCo = DB.companies.slice(0,10);
+  var maxCo = topCo[0] ? topCo[0].count : 1;
+  document.getElementById('ov-companies').innerHTML = topCo.map(function(c,i){ return mbar(c.name,c.count,maxCo,palette[i%palette.length]); }).join('');
+
+  var sc = {}; st.forEach(function(s){ var k=s.int_status||'Not Started'; sc[k]=(sc[k]||0)+1; });
+  var scArr = Object.entries(sc).sort(function(a,b){return b[1]-a[1];});
+  var maxSc = scArr[0]?scArr[0][1]:1;
+  var scCol = {'Placed':'var(--green)','External Offer':'var(--cyan)','Already working':'var(--accent)','Not Started':'var(--text3)','entrepreneurship':'var(--orange)'};
+  document.getElementById('ov-int-status').innerHTML = scArr.map(function(e){ return mbar(e[0],e[1],maxSc,scCol[e[0]]||'var(--accent)'); }).join('');
+
+  function countAndBar(arr, fn, col, id) {
+    var c = {}; arr.forEach(function(s){ var k=fn(s)||'Unknown'; c[k]=(c[k]||0)+1; });
+    var max = Math.max.apply(null, Object.values(c));
+    document.getElementById(id).innerHTML = '<div class="mbars">'+Object.entries(c).map(function(e){ return mbar(e[0],e[1],max,col); }).join('')+'</div>';
+  }
+  countAndBar(st, function(s){return s.batch;}, 'var(--accent)', 'ov-batch');
+  var cohOrd = ['Top','Upper Medium','Lower Medium','Bottom','Bottom Most'];
+  var cohCol = ['var(--green)','var(--cyan)','var(--orange)','var(--red)','#be123c'];
+  var cohC = {}; st.forEach(function(s){ var k=s.cohort||'Unknown'; cohC[k]=(cohC[k]||0)+1; });
+  var maxCoh = Math.max.apply(null, Object.values(cohC));
+  document.getElementById('ov-cohort').innerHTML = '<div class="mbars">'+cohOrd.map(function(n,i){ return cohC[n]?mbar(n,cohC[n],maxCoh,cohCol[i]):''; }).join('')+'</div>';
+  countAndBar(st, function(s){return s.resume;}, 'var(--green)', 'ov-resume');
+
+  var low = st.filter(function(s){ return s.has_att && s.att<75; }).sort(function(a,b){return a.att-b.att;}).slice(0,8);
+  if (!low.length) {
+    document.getElementById('ov-low-att').innerHTML = '<div class="empty"><div class="empty-ico">✅</div><div class="empty-msg">All students above 75%</div></div>';
+  } else {
+    document.getElementById('ov-low-att').innerHTML = '<div style="display:flex;flex-direction:column;gap:7px;">'+
+      low.map(function(s){
+        return '<div style="display:flex;align-items:center;gap:10px;padding:7px 10px;background:var(--bg3);border-radius:8px;">'
+          +'<div style="flex:1;font-size:12px;font-weight:700;">'+s.name+'</div>'
+          +'<div style="font-size:11px;color:var(--text3);">'+s.batch+'</div>'
+          +pct(s.att)+'</div>';
+      }).join('')
+      +'<div style="text-align:center;margin-top:8px;"><span class="lnk" style="font-size:12px;" onclick="nav(\'attendance\')">View all '+st.filter(function(s){return s.has_att&&s.att<75;}).length+' students →</span></div>'
+    +'</div>';
+  }
+
+  var stips = pl.map(function(p){return p.stipend;}).filter(function(v){return v>0;});
+  var sbuckets = {'< 5K':0,'5K–10K':0,'10K–20K':0,'20K–30K':0,'30K+':0};
+  stips.forEach(function(v){ if(v<5000)sbuckets['< 5K']++;else if(v<10000)sbuckets['5K–10K']++;else if(v<20000)sbuckets['10K–20K']++;else if(v<30000)sbuckets['20K–30K']++;else sbuckets['30K+']++; });
+  var maxStip = Math.max.apply(null, Object.values(sbuckets));
+  var sCol = {'< 5K':'var(--text3)','5K–10K':'var(--orange)','10K–20K':'var(--cyan)','20K–30K':'var(--green)','30K+':'#22d3ee'};
+  document.getElementById('ov-stipend').innerHTML = Object.entries(sbuckets).map(function(e){ return mbar(e[0],e[1],maxStip,sCol[e[0]]); }).join('');
+}
+
+// ── STUDENTS ─────────────────────────────────────────────────────────────────
+function renderStudents(pg) {
+  var q=(document.getElementById('s-q').value||'').toLowerCase();
+  var batch=document.getElementById('s-batch').value;
+  var cohort=document.getElementById('s-cohort').value;
+  var mentor=document.getElementById('s-mentor').value;
+  var intS=document.getElementById('s-int').value;
+  var data = DB.students.filter(function(s){
+    if(q && !(s.name.toLowerCase().includes(q)||s.email.toLowerCase().includes(q)||s.enroll.toLowerCase().includes(q))) return false;
+    if(batch && s.batch!==batch) return false;
+    if(cohort && s.cohort!==cohort) return false;
+    if(mentor && s.mentor!==mentor) return false;
+    if(intS==='Not Placed' && s.int_status) return false;
+    if(intS && intS!=='Not Placed' && s.int_status!==intS) return false;
+    return true;
+  });
+  data = doSort(data,'s');
+  document.getElementById('s-cnt').textContent = data.length+' students';
+  var slice = data.slice((pg-1)*PS, pg*PS);
+  var isBadge = {'Placed':'bg','External Offer':'bc','Already working':'bb','entrepreneurship':'bo','Back to Placement':'bo','Internal Placed CP':'bp'};
+  document.getElementById('s-tbody').innerHTML = slice.length ? slice.map(function(s){
+    return '<tr>'
+      +'<td><span class="lnk" onclick="openModal(\''+s.id+'\')">'+f(s.name)+'</span></td>'
+      +'<td><span class="mono" style="font-size:11px;color:var(--text3)">'+f(s.enroll)+'</span></td>'
+      +'<td>'+badge(s.batch,'bk')+'</td>'
+      +'<td style="font-size:12px;color:var(--text2)">'+f(s.cohort)+'</td>'
+      +'<td style="font-size:12px">'+f(s.mentor)+'</td>'
+      +'<td>'+(s.resume==='Approved'?badge('✓ Approved','bg'):s.resume?badge(s.resume,'bo'):badge('—','bk'))+'</td>'
+      +'<td style="min-width:150px">'+(s.has_att?pct(s.att):'<span style="color:var(--text3)">N/A</span>')+'</td>'
+      +'<td>'+(s.int_status?badge(s.int_status,isBadge[s.int_status]||'bb'):badge('','bk'))+'</td>'
+      +'<td><button class="act-btn" onclick="openModal(\''+s.id+'\')">Profile</button></td>'
+      +'</tr>';
+  }).join('') : '<tr><td colspan="9"><div class="empty"><div class="empty-ico">🔍</div><div class="empty-msg">No students match your filters</div></div></td></tr>';
+  renderPgn('s-pgn', data.length, pg, 'renderStudents');
+}
+
+// ── ATTENDANCE ────────────────────────────────────────────────────────────────
+function setAttF(f, el) {
+  ATT_F = f;
+  document.querySelectorAll('#att-tabs .ptab').forEach(function(t){t.classList.remove('on');});
+  el.classList.add('on');
+  renderAtt(1);
+}
+function renderAtt(pg) {
+  var q=(document.getElementById('a-q').value||'').toLowerCase();
+  var batch=document.getElementById('a-batch').value;
+  var mentor=document.getElementById('a-mentor').value;
+  var data = DB.students.filter(function(s){
+    if(q && !s.name.toLowerCase().includes(q)) return false;
+    if(batch && s.batch!==batch) return false;
+    if(mentor && s.mentor!==mentor) return false;
+    if(ATT_F==='c50') return s.has_att && s.att<50;
+    if(ATT_F==='c75') return s.has_att && s.att<75;
+    if(ATT_F==='g75') return s.has_att && s.att>=75;
+    if(ATT_F==='g90') return s.has_att && s.att>=90;
+    return true;
+  });
+  data = doSort(data,'a');
+  document.getElementById('a-cnt').textContent = data.length+' students';
+  var slice = data.slice((pg-1)*PS, pg*PS);
+  document.getElementById('a-tbody').innerHTML = slice.length ? slice.map(function(s){
+    var risk = !s.has_att?badge('N/A','bk'):s.att<50?badge('🔴 Critical','br'):s.att<75?badge('🟠 Warning','bo'):s.att>=90?badge('⭐ Excellent','bg'):badge('🟢 Good','bc');
+    return '<tr>'
+      +'<td><span class="lnk" onclick="openModal(\''+s.id+'\')">'+f(s.name)+'</span></td>'
+      +'<td><span class="mono" style="font-size:11px;color:var(--text3)">'+f(s.enroll)+'</span></td>'
+      +'<td>'+badge(s.batch,'bk')+'</td>'
+      +'<td style="font-size:12px">'+f(s.mentor)+'</td>'
+      +'<td style="min-width:160px">'+(s.has_att?pct(s.att):'<span style="color:var(--text3)">N/A</span>')+'</td>'
+      +'<td>'+risk+'</td>'
+      +'<td><button class="act-btn" onclick="openModal(\''+s.id+'\')">Profile</button></td>'
+      +'</tr>';
+  }).join('') : '<tr><td colspan="7"><div class="empty"><div class="empty-ico">✅</div><div class="empty-msg">No students in this range</div></div></td></tr>';
+  renderPgn('a-pgn', data.length, pg, 'renderAtt');
+}
+
+// ── PLACEMENTS ────────────────────────────────────────────────────────────────
+function renderPlaced(pg) {
+  var q=(document.getElementById('p-q').value||'').toLowerCase();
+  var company=document.getElementById('p-company').value;
+  var sem=document.getElementById('p-sem').value;
+  var campus=document.getElementById('p-campus').value;
+  var data = DB.placed.filter(function(p){
+    if(q && !(p.name.toLowerCase().includes(q)||p.company.toLowerCase().includes(q))) return false;
+    if(company && p.company!==company) return false;
+    if(sem && String(p.sem)!==sem) return false;
+    if(campus && p.campus!==campus) return false;
+    return true;
+  });
+  data = doSort(data,'p');
+  document.getElementById('p-cnt').textContent = data.length+' placements';
+  var slice = data.slice((pg-1)*PS, pg*PS);
+  document.getElementById('p-tbody').innerHTML = slice.length ? slice.map(function(p){
+    return '<tr>'
+      +'<td style="font-weight:700">'+f(p.name)+'</td>'
+      +'<td style="color:var(--accent);font-weight:700">'+f(p.company)+'</td>'
+      +'<td style="font-size:12px;max-width:200px;word-break:break-word;color:var(--text2)">'+f(p.role)+'</td>'
+      +'<td style="color:var(--green);font-weight:700">'+finr(p.stipend)+'</td>'
+      +'<td>'+badge(String(p.sem),'bk')+'</td>'
+      +'<td>'+badge(p.campus,p.campus==='ADYPU'?'bb':'bp')+'</td>'
+      +'<td style="font-size:12px;color:var(--text3)">'+f(p.date)+'</td>'
+      +'<td>'+(p.ol==='Recieved'?badge('✓ Received','bg'):p.ol?badge(p.ol,'bo'):badge('','bk'))+'</td>'
+      +'</tr>';
+  }).join('') : '<tr><td colspan="8"><div class="empty"><div class="empty-ico">🔍</div><div class="empty-msg">No placements match filters</div></div></td></tr>';
+  renderPgn('p-pgn', data.length, pg, 'renderPlaced');
+}
+
+// ── COMPANIES ─────────────────────────────────────────────────────────────────
+function renderCompanies() {
+  var q=(document.getElementById('co-q').value||'').toLowerCase();
+  var data = DB.companies.filter(function(c){ return !q||c.name.toLowerCase().includes(q); });
+  data = doSort(data,'co');
+  document.getElementById('co-cnt').textContent = data.length+' companies';
+  document.getElementById('co-tbody').innerHTML = data.length ? data.map(function(c){
+    return '<tr>'
+      +'<td style="font-weight:800;color:var(--accent)">'+c.name+'</td>'
+      +'<td>'+badge(c.count,'bg')+'</td>'
+      +'<td style="color:var(--green);font-weight:700">'+finr(c.avg_stipend)+'</td>'
+      +'<td style="color:var(--cyan);font-weight:700">'+finr(c.max_stipend)+'</td>'
+      +'<td style="font-size:11px;color:var(--text3);max-width:200px">'+c.roles.slice(0,2).join(', ')+(c.roles.length>2?' +'+( c.roles.length-2)+' more':'')+'</td>'
+      +'<td style="font-size:12px;color:var(--text2)">'+c.students.slice(0,3).join(', ')+(c.students.length>3?' +'+(c.students.length-3)+' more':'')+'</td>'
+      +'</tr>';
+  }).join('') : '<tr><td colspan="6"><div class="empty"><div class="empty-ico">🔍</div><div class="empty-msg">No companies found</div></div></td></tr>';
+}
+
+// ── ICPC ─────────────────────────────────────────────────────────────────────
+function renderICPC(pg) {
+  var q=(document.getElementById('ic-q').value||'').toLowerCase();
+  var batch=document.getElementById('ic-batch').value;
+  var skill=document.getElementById('ic-skill').value;
+  var sel=document.getElementById('ic-sel').value;
+  var data = DB.icpc.filter(function(s){
+    if(q && !(s.name.toLowerCase().includes(q)||(s.cf_handle||'').toLowerCase().includes(q))) return false;
+    if(batch && s.batch!==batch) return false;
+    if(skill && s.skill!==skill) return false;
+    if(sel==='yes' && !s.selected) return false;
+    if(sel==='no' && s.selected) return false;
+    return true;
+  });
+  data = doSort(data,'ic');
+  document.getElementById('ic-cnt').textContent = data.length+' students';
+  var slice = data.slice((pg-1)*PS, pg*PS);
+  document.getElementById('ic-tbody').innerHTML = slice.length ? slice.map(function(s){
+    var rColor = s.cf_rating>=1400?'var(--green)':s.cf_rating>=1200?'var(--cyan)':'var(--text2)';
+    return '<tr>'
+      +'<td style="font-weight:700">'+f(s.name)+'</td>'
+      +'<td><span class="mono" style="font-size:11px;color:var(--text3)">'+f(s.enroll)+'</span></td>'
+      +'<td>'+badge(s.batch,'bk')+'</td>'
+      +'<td style="font-size:12px">'+f(s.mentor)+'</td>'
+      +'<td style="font-weight:800;color:'+rColor+'">'+( s.cf_rating>0?s.cf_rating:'—')+'</td>'
+      +'<td style="font-weight:700">'+( s.problems>0?s.problems:'—')+'</td>'
+      +'<td style="color:var(--accent);font-weight:700">'+( s.percentile>0?s.percentile+'%':'—')+'</td>'
+      +'<td style="color:'+(s.att>=8?'var(--green)':s.att>=5?'var(--orange)':'var(--red)')+'">'+( s.att>0?s.att:'—')+'</td>'
+      +'<td>'+(s.selected?badge('✓ Selected','bg'):badge('—','bk'))+'</td>'
+      +'</tr>';
+  }).join('') : '<tr><td colspan="9"><div class="empty"><div class="empty-ico">💻</div><div class="empty-msg">No students match filters</div></div></td></tr>';
+  renderPgn('ic-pgn', data.length, pg, 'renderICPC');
+}
+
+// ── OPEN SOURCE ───────────────────────────────────────────────────────────────
+function renderOSS(pg) {
+  var q=(document.getElementById('os-q').value||'').toLowerCase();
+  var campus=document.getElementById('os-campus').value;
+  var flags=document.getElementById('os-flags').value;
+  var data = DB.oss.filter(function(s){
+    if(q && !(s.name.toLowerCase().includes(q)||(s.github||'').toLowerCase().includes(q)||(s.repo||'').toLowerCase().includes(q))) return false;
+    if(campus && s.campus!==campus) return false;
+    if(flags==='red' && !s.red_flags) return false;
+    if(flags==='clean' && s.red_flags) return false;
+    return true;
+  });
+  data = doSort(data,'os');
+  document.getElementById('os-cnt').textContent = data.length+' students';
+  var slice = data.slice((pg-1)*PS, pg*PS);
+  document.getElementById('os-tbody').innerHTML = slice.length ? slice.map(function(s){
+    var gh = s.github ? '<a href="https://github.com/'+s.github+'" target="_blank" style="color:var(--accent);font-size:11px;text-decoration:none;">'+s.github+'</a>' : '—';
+    var com = s.community>0 ? '<span style="color:'+(s.community>=4?'var(--green)':s.community>=2?'var(--orange)':'var(--red)')+'">'+s.community+'/5</span>' : '—';
+    return '<tr>'
+      +'<td style="font-weight:700">'+f(s.name)+'</td>'
+      +'<td>'+gh+'</td>'
+      +'<td>'+badge(s.campus,s.campus==='ADYPU'?'bb':'bp')+'</td>'
+      +'<td style="font-size:12px;color:var(--text3)">'+f(s.year)+'</td>'
+      +'<td style="font-size:12px;color:var(--text2);max-width:180px;word-break:break-word">'+f(s.repo)+'</td>'
+      +'<td style="text-align:center;font-weight:800;color:'+(s.merged>0?'var(--green)':'var(--text3)')+'">'+( s.merged>0?s.merged:'—')+'</td>'
+      +'<td style="text-align:center;color:var(--orange)">'+( s.open_prs>0?s.open_prs:'—')+'</td>'
+      +'<td style="text-align:center">'+com+'</td>'
+      +'<td>'+(s.red_flags?'<span style="color:var(--red);font-size:11px;" title="'+s.red_flags+'">⚠️ '+s.red_flags.substring(0,35)+(s.red_flags.length>35?'…':'')+'</span>':'<span style="color:var(--green);">✓ Clear</span>')+'</td>'
+      +'</tr>';
+  }).join('') : '<tr><td colspan="9"><div class="empty"><div class="empty-ico">🌐</div><div class="empty-msg">No students found</div></div></td></tr>';
+  renderPgn('os-pgn', data.length, pg, 'renderOSS');
+}
+
+// ── MODAL ─────────────────────────────────────────────────────────────────────
+function riskBadge(risk) {
+  if (!risk) return '<span class="b bk">—</span>';
+  if (risk.includes('No Risk') || risk.includes('No Intervention')) return '<span class="b bg">🟢 ' + risk + '</span>';
+  if (risk.includes('Critical') || risk.includes('At Risk')) return '<span class="b br">🔴 ' + risk + '</span>';
+  if (risk.includes('Attention')) return '<span class="b bo">🟠 ' + risk + '</span>';
+  if (risk.includes('Stable')) return '<span class="b bc">🟡 ' + risk + '</span>';
+  return '<span class="b bk">' + risk + '</span>';
+}
+function subjectRow(name, marks, risk) {
+  if (!name) return '';
+  var bar = marks != null
+    ? '<div style="display:flex;align-items:center;gap:6px;margin-top:3px">'
+      + '<div style="flex:1;height:5px;background:var(--bg);border-radius:3px;overflow:hidden">'
+      + '<div style="width:' + Math.min(marks, 100) + '%;height:100%;background:'
+      + (marks >= 80 ? 'var(--green)' : marks >= 60 ? 'var(--cyan)' : marks >= 40 ? 'var(--orange)' : 'var(--red)')
+      + ';border-radius:3px"></div></div>'
+      + '<span style="font-size:11px;font-weight:700;font-family:var(--mono);color:'
+      + (marks >= 80 ? 'var(--green)' : marks >= 60 ? 'var(--cyan)' : marks >= 40 ? 'var(--orange)' : 'var(--red)')
+      + '">' + marks + '</span></div>'
+    : '';
+  return '<div style="background:var(--bg);border-radius:6px;padding:8px 10px">'
+    + '<div style="font-size:10px;font-weight:700;letter-spacing:1px;color:var(--text3);text-transform:uppercase">' + name + '</div>'
+    + bar
+    + '<div style="margin-top:4px">' + (risk ? riskBadge(risk) : '') + '</div>'
+    + '</div>';
+}
+function sectionHdr(icon, label, color) {
+  return '<div style="display:flex;align-items:center;gap:8px;margin:20px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border)">'
+    + '<span style="font-size:16px">' + icon + '</span>'
+    + '<span style="font-size:13px;font-weight:800;letter-spacing:.5px;color:' + (color || 'var(--text2)') + '">' + label + '</span>'
+    + '</div>';
+}
+function infoChip(label, value, valueColor) {
+  return '<div style="background:var(--bg3);border-radius:8px;padding:11px 13px">'
+    + '<div style="font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:4px">' + label + '</div>'
+    + '<div style="font-size:13px;font-weight:700;color:' + (valueColor || 'var(--text)') + '">' + (value !== null && value !== undefined && value !== '' ? value : '—') + '</div>'
+    + '</div>';
+}
+
+function openModal(uid) {
+  var s = DB.students.filter(function(x){ return x.id === String(uid); })[0];
+  if (!s) return;
+  var profile = DB.profiles ? DB.profiles[String(uid)] : null;
+  var pl      = profile ? profile.placement : null;
+  var oo      = profile ? (profile.oo || []) : [];
+  var fg      = profile ? (profile.fg || []) : [];
+  var ic      = profile ? profile.icpc : null;
+  var os      = profile ? profile.oss : null;
+  var courses = profile ? (profile.courses || []) : [];
+
+  var oo_sessioned = oo.filter(function(r){ return r.date; })
+                       .sort(function(a,b){ return b.date > a.date ? 1 : -1; });
+  var isBadge = {'Placed':'bg','External Offer':'bc','Already working':'bb',
+                 'entrepreneurship':'bo','Back to Placement':'bo','Internal Placed CP':'bp'};
+
+  // ── Header ──────────────────────────────────────────────────────────────────
+  var h = '<div class="modal-hdr">'
+    + '<div>'
+    + '<div class="modal-name">' + f(s.name) + '</div>'
+    + '<div class="modal-meta">' + f(s.email) + ' &nbsp;·&nbsp; ' + f(s.enroll) + '</div>'
+    + '<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">'
+    + badge(s.batch, 'bk')
+    + badge(s.cohort || '—', 'bk')
+    + (s.int_status ? badge(s.int_status, isBadge[s.int_status] || 'bb') : '')
+    + '</div>'
+    + '</div>'
+    + '<button class="modal-x" onclick="closeModal()">✕</button>'
+    + '</div>';
+
+  // ── Program participation quick-look ────────────────────────────────────────
+  h += '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;padding:12px 14px;background:var(--bg3);border-radius:10px;align-items:center">'
+    + '<span style="font-size:10px;font-weight:800;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;margin-right:4px">PROGRAMS</span>'
+    + (pl ? '<span class="b bg">🏢 Placed</span>' : '<span class="b bk">🏢 Not Placed</span>')
+    + (oo_sessioned.length > 0 ? '<span class="b bb">🤝 1:1 Done (' + oo_sessioned.length + ')</span>' : '<span class="b bk">🤝 No 1:1 Yet</span>')
+    + (fg.length > 0 ? '<span class="b bp">🎯 Focus Group</span>' : '<span class="b bk">🎯 Not in Focus Group</span>')
+    + (ic ? '<span class="b bc">💻 ICPC / CP</span>' : '<span class="b bk">💻 Not in ICPC</span>')
+    + (os ? '<span class="b" style="background:rgba(236,72,153,.15);color:var(--pink)">🌐 Open Source</span>' : '<span class="b bk">🌐 Not in Open Source</span>')
+    + '</div>';
+
+  // ── Core info ───────────────────────────────────────────────────────────────
+  h += sectionHdr('📋', 'Core Information', 'var(--text2)');
+  h += '<div class="modal-grid">'
+    + infoChip('Mentor', s.mentor)
+    + infoChip('Resume', s.resume === 'Approved' ? '✓ Approved' : (s.resume || '—'),
+               s.resume === 'Approved' ? 'var(--green)' : 'var(--orange)')
+    + infoChip('PR Status', s.pr === 'Yes' ? '✓ Yes' : 'No',
+               s.pr === 'Yes' ? 'var(--green)' : 'var(--red)')
+    + infoChip('Cohort', s.cohort || '—')
+    + infoChip('Applied Count', s.applied, 'var(--accent)')
+    + infoChip('Pre-Shortlisted', s.shortlist, 'var(--cyan)')
+    + '</div>';
+
+  // ── Attendance ──────────────────────────────────────────────────────────────
+  h += sectionHdr('📊', 'Attendance', 'var(--orange)');
+  var avgAtt = s.has_att ? s.att : null;
+  var attCol = avgAtt == null ? 'var(--text3)' : avgAtt < 50 ? 'var(--red)' : avgAtt < 75 ? 'var(--orange)' : avgAtt >= 90 ? 'var(--green)' : 'var(--cyan)';
+  var attLabel = avgAtt == null ? '' : avgAtt < 50 ? '🔴 Critical — below 50%' : avgAtt < 75 ? '🟠 At Risk — below 75%' : avgAtt >= 90 ? '⭐ Excellent' : '🟢 Good';
+
+  h += '<div style="display:flex;align-items:center;gap:20px;padding:14px 18px;background:var(--bg3);border-radius:10px;margin-bottom:12px">'
+    + '<div style="text-align:center;flex-shrink:0">'
+    + '<div style="font-size:40px;font-weight:900;color:' + attCol + ';line-height:1">' + (avgAtt != null ? avgAtt + '%' : 'N/A') + '</div>'
+    + '<div style="font-size:10px;color:var(--text3);margin-top:3px;text-transform:uppercase;letter-spacing:1px">Overall Avg</div>'
+    + '</div>'
+    + '<div style="flex:1">'
+    + (avgAtt != null ? '<div style="height:10px;background:var(--bg);border-radius:5px;overflow:hidden;margin-bottom:10px"><div style="width:' + Math.min(avgAtt,100) + '%;height:100%;background:' + attCol + ';border-radius:5px"></div></div>' : '')
+    + '<span style="font-size:13px;font-weight:700;color:' + attCol + '">' + attLabel + '</span>'
+    + '</div></div>';
+
+  // Per-subject attendance cards
+  if (courses.length > 0) {
+    h += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px">';
+    courses.forEach(function(c) {
+      var cc = c.pct < 50 ? 'var(--red)' : c.pct < 75 ? 'var(--orange)' : 'var(--green)';
+      var icon = c.pct < 50 ? '🔴' : c.pct < 75 ? '🟠' : '🟢';
+      h += '<div style="background:var(--bg3);border-radius:10px;padding:12px 14px;border-left:4px solid ' + cc + '">'
+        + '<div style="font-size:11px;font-weight:700;color:var(--text2);margin-bottom:8px">' + icon + ' ' + c.subject + '</div>'
+        + '<div style="font-size:24px;font-weight:900;color:' + cc + ';line-height:1">' + c.pct + '%</div>'
+        + '<div style="height:4px;background:var(--bg);border-radius:2px;margin:6px 0;overflow:hidden"><div style="width:' + Math.min(c.pct,100) + '%;height:100%;background:' + cc + ';border-radius:2px"></div></div>'
+        + '<div style="font-size:10px;color:var(--text3)">' + c.attended + ' / ' + c.total + ' classes attended</div>'
+        + '</div>';
+    });
+    h += '</div>';
+  } else {
+    h += '<div style="padding:12px;background:var(--bg3);border-radius:8px;color:var(--text3);font-size:13px;text-align:center">No per-subject attendance data available</div>';
+  }
+
+  // ── Placement ──────────────────────────────────────────────────────────────
+  if (pl) {
+    h += sectionHdr('🏢', 'Placement Details', 'var(--green)');
+    h += '<div style="background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.25);border-radius:10px;padding:14px">'
+      + '<div class="modal-grid">'
+      + infoChip('Company', pl.company, 'var(--green)')
+      + infoChip('Stipend', pl.stipend > 0 ? '₹' + Number(pl.stipend).toLocaleString('en-IN') : '—', 'var(--green)')
+      + infoChip('Role', pl.role || '—')
+      + infoChip('Location', pl.location || '—')
+      + infoChip('Date of Joining', pl.date || '—', 'var(--cyan)')
+      + infoChip('OL Status', pl.ol || '—', pl.ol === 'Recieved' ? 'var(--green)' : 'var(--orange)')
+      + infoChip('Semester', String(pl.sem))
+      + infoChip('Type', pl.type || 'On Campus')
+      + '</div></div>';
+  }
+
+  // ── 1:1 Sessions ───────────────────────────────────────────────────────────
+  h += sectionHdr('🤝', '1:1 Sessions', 'var(--accent)');
+  if (oo.length === 0) {
+    h += '<div style="padding:14px;background:var(--bg3);border-radius:10px;color:var(--text3);font-size:13px;text-align:center">No 1:1 records found for this student</div>';
+  } else if (oo_sessioned.length === 0) {
+    h += '<div style="padding:14px;background:var(--bg3);border-radius:10px;display:flex;align-items:center;gap:10px">'
+      + '<span style="font-size:24px">⏳</span>'
+      + '<div><div style="font-weight:700;color:var(--orange)">Enrolled — No session conducted yet</div>'
+      + '<div style="font-size:12px;color:var(--text3);margin-top:3px">Semester: ' + (oo[0].sem || '—') + ' &nbsp;·&nbsp; Cohort: ' + (oo[0].cohort || '—') + '</div></div>'
+      + '</div>';
+  } else {
+    oo_sessioned.forEach(function(r, idx) {
+      h += '<div style="background:rgba(59,130,246,.05);border:1px solid rgba(59,130,246,.18);border-radius:10px;padding:14px;margin-bottom:10px">';
+      // Session header
+      h += '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:14px">'
+        + '<div style="display:flex;gap:6px;flex-wrap:wrap">'
+        + badge('📅 ' + r.date, 'bc')
+        + badge(r.session_type === 'One-on-One' ? '1:1' : (r.session_type || '—'), 'bb')
+        + badge(r.direction || '', 'bk')
+        + badge(r.sem, 'bk')
+        + '</div>'
+        + (r.risk ? riskBadge(r.risk) : '')
+        + '</div>';
+      // Subject scores
+      h += '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px">'
+        + subjectRow(r.s1, r.s1m, r.s1r)
+        + subjectRow(r.s2, r.s2m, r.s2r)
+        + subjectRow(r.s3, r.s3m, r.s3r)
+        + subjectRow(r.s4, r.s4m, r.s4r)
+        + '</div>';
+      // Behaviour metrics
+      h += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">'
+        + infoChip('Avg Confidence', r.avg_conf != null ? r.avg_conf + '%' : '—', 'var(--accent)')
+        + infoChip('Weekly Hrs', r.hrs != null ? r.hrs + 'h' : '—', 'var(--cyan)')
+        + infoChip('Effort Level', r.effort || '—', r.effort && r.effort.includes('High') ? 'var(--green)' : r.effort ? 'var(--orange)' : 'var(--text3)')
+        + infoChip('Study Pattern', r.study || '—')
+        + infoChip('2×2 Matrix', r.matrix ? r.matrix.replace(/[🏆⚡🔥⚖️]/gu,'').trim() : '—')
+        + '</div>';
+      h += '</div>';
+    });
+  }
+
+  // ── Focus Group ────────────────────────────────────────────────────────────
+  h += sectionHdr('🎯', 'Focus Group Sessions', 'var(--purple)');
+  if (fg.length === 0) {
+    h += '<div style="padding:14px;background:var(--bg3);border-radius:10px;color:var(--text3);font-size:13px;text-align:center">Not part of any focus group</div>';
+  } else {
+    fg.forEach(function(r) {
+      h += '<div style="background:rgba(139,92,246,.05);border:1px solid rgba(139,92,246,.2);border-radius:10px;padding:14px;margin-bottom:8px">';
+      h += '<div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">'
+        + badge('Mentor: ' + (r.mentor || '—'), 'bp')
+        + badge(r.sem || '—', 'bk')
+        + badge(r.cohort || '—', 'bk')
+        + '</div>';
+      if (r.note1) h += '<div style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:8px;padding:10px 12px;background:var(--bg3);border-radius:8px;border-left:3px solid var(--purple)"><strong style="color:var(--purple)">1:1 Note: </strong>' + r.note1 + '</div>';
+      if (r.note2) h += '<div style="font-size:12px;color:var(--text3);line-height:1.7;padding:10px 12px;background:var(--bg3);border-radius:8px;border-left:3px solid var(--border2)"><strong>Follow-up: </strong>' + r.note2 + '</div>';
+      h += '</div>';
+    });
+  }
+
+  // ── ICPC ───────────────────────────────────────────────────────────────────
+  h += sectionHdr('💻', 'ICPC / Competitive Programming', 'var(--cyan)');
+  if (!ic) {
+    h += '<div style="padding:14px;background:var(--bg3);border-radius:10px;color:var(--text3);font-size:13px;text-align:center">Not enrolled in ICPC / Competitive Programming</div>';
+  } else {
+    h += '<div style="background:rgba(6,182,212,.05);border:1px solid rgba(6,182,212,.2);border-radius:10px;padding:14px">'
+      + '<div class="modal-grid">'
+      + infoChip('Year', ic.year || '—', 'var(--cyan)')
+      + infoChip('Skill Level', ic.skill || '—', ic.skill === 'High' ? 'var(--green)' : ic.skill === 'Medium' ? 'var(--orange)' : 'var(--red)')
+      + infoChip('CF Handle', ic.cf_handle || '—', 'var(--cyan)')
+      + infoChip('CF Max Rating', ic.cf_rating > 0 ? ic.cf_rating : '—', ic.cf_rating >= 1400 ? 'var(--green)' : 'var(--cyan)')
+      + infoChip('Problems Solved', ic.problems > 0 ? ic.problems : '—', 'var(--accent)')
+      + infoChip('Contests Given', ic.contests > 0 ? ic.contests : '—')
+      + infoChip('CP Attendance', ic.att > 0 ? ic.att : '—', ic.att >= 8 ? 'var(--green)' : ic.att >= 5 ? 'var(--orange)' : 'var(--red)')
+      + infoChip('Selected / Passed', ic.selected ? '✓ Yes' : 'No', ic.selected ? 'var(--green)' : 'var(--text3)')
+      + (ic.percentile > 0 ? infoChip('Avg Percentile', ic.percentile + '%', 'var(--accent)') : '')
+      + (ic.score > 0 ? infoChip('Total Score', ic.score, 'var(--green)') : '')
+      + (ic.ada_marks > 0 ? infoChip('ADA Marks', ic.ada_marks, 'var(--cyan)') : '')
+      + '</div></div>';
+  }
+
+  // ── Open Source ────────────────────────────────────────────────────────────
+  h += sectionHdr('🌐', 'Open Source Program', 'var(--pink)');
+  if (!os) {
+    h += '<div style="padding:14px;background:var(--bg3);border-radius:10px;color:var(--text3);font-size:13px;text-align:center">Not enrolled in the Open Source Program</div>';
+  } else {
+    var ghLink = os.github ? '<a href="https://github.com/' + os.github + '" target="_blank" style="color:var(--accent);text-decoration:none">' + os.github + ' ↗</a>' : '—';
+    h += '<div style="background:rgba(236,72,153,.05);border:1px solid rgba(236,72,153,.2);border-radius:10px;padding:14px">'
+      + '<div class="modal-grid">'
+      + '<div style="background:var(--bg3);border-radius:8px;padding:11px 13px;grid-column:1/-1"><div style="font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:4px">GitHub</div><div style="font-size:14px;font-weight:700">' + ghLink + '</div></div>'
+      + infoChip('Repository / Org', os.repo || '—')
+      + infoChip('Campus', os.campus || '—')
+      + infoChip('Merged PRs', os.merged > 0 ? os.merged : '—', 'var(--green)')
+      + infoChip('Open PRs', os.open_prs > 0 ? os.open_prs : '—', 'var(--orange)')
+      + infoChip('Closed PRs', (os.closed_prs && os.closed_prs > 0) ? os.closed_prs : '—', 'var(--text2)')
+      + infoChip('Open Issues', (os.open_issues && os.open_issues > 0) ? os.open_issues : '—', 'var(--cyan)')
+      + infoChip('Community Activity', os.community > 0 ? os.community + ' / 5' : '—', os.community >= 4 ? 'var(--green)' : os.community >= 2 ? 'var(--orange)' : 'var(--red)')
+      + infoChip('Local Setup', os.local_setup || '—', os.local_setup && os.local_setup.toLowerCase().includes('done') ? 'var(--green)' : 'var(--text2)')
+      + infoChip('Maintainer Connect', os.maintainer_connect || '—')
+      + infoChip('PRs Documented', os.prs_documented || '—')
+      + infoChip('Red Flags', os.red_flags ? '⚠️ ' + os.red_flags : '✓ None', os.red_flags ? 'var(--red)' : 'var(--green)')
+      + '</div>'
+      + (os.mentor_notes ? '<div style="margin-top:10px;padding:10px 12px;background:var(--bg3);border-radius:8px;font-size:12px;color:var(--text2);line-height:1.6;border-left:3px solid var(--pink)"><strong>Mentor Notes: </strong>' + os.mentor_notes + '</div>' : '')
+      + (os.major_issues ? '<div style="margin-top:8px;padding:10px 12px;background:rgba(239,68,68,.06);border-radius:8px;font-size:12px;color:var(--red);line-height:1.6;border-left:3px solid var(--red)"><strong>Major Issues: </strong>' + os.major_issues + '</div>' : '')
+      + '</div>';
+  }
+
+  document.getElementById('modal-body').innerHTML = h;
+  document.getElementById('modal-bg').classList.add('on');
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modal-bg')) {
+    document.getElementById('modal-bg').classList.remove('on');
+  }
+}
+
+
+// ── 1:1 SESSIONS ─────────────────────────────────────────────────────────────
+var OO_SEM = 'all';
+function setOOSem(s, el) {
+  OO_SEM = s;
+  document.querySelectorAll('#oo-sem-tabs .ptab').forEach(function(t){t.classList.remove('on');});
+  el.classList.add('on');
+  renderOO(1);
+}
+function renderOO(pg) {
+  var q=(document.getElementById('oo-q').value||'').toLowerCase();
+  var batch=document.getElementById('oo-batch').value;
+  var risk=document.getElementById('oo-risk').value;
+  var effort=document.getElementById('oo-effort').value;
+  var data = DB.oneonone.filter(function(r){
+    if(q && !r.name.toLowerCase().includes(q)) return false;
+    if(batch && r.batch!==batch) return false;
+    if(OO_SEM==='sessioned' && !r.date) return false;
+    if(OO_SEM==='Sem 4' && r.sem!=='Sem 4') return false;
+    if(OO_SEM==='Sem 2' && r.sem!=='Sem 2') return false;
+    if(risk && !(r.risk||'').includes(risk)) return false;
+    if(effort && !(r.effort||'').includes(effort)) return false;
+    return true;
+  });
+  data = doSort(data,'oo');
+  document.getElementById('oo-cnt').textContent = data.length+' records';
+  var slice = data.slice((pg-1)*PS, pg*PS);
+
+  var riskColor = {'No Risk':'bg','Critical Risk':'br','Unknown':'bk'};
+  var effortColor = {'High Effort':'bg','Low Effort':'br'};
+
+  document.getElementById('oo-tbody').innerHTML = slice.length ? slice.map(function(r){
+    var riskKey = r.risk ? (r.risk.includes('No Risk')?'No Risk':r.risk.includes('Critical')?'Critical Risk':'Unknown') : 'Unknown';
+    var effortKey = r.effort ? (r.effort.includes('High')?'High Effort':r.effort.includes('Low')?'Low Effort':'') : '';
+    var matrixShort = r.matrix ? r.matrix.replace('🏆','').replace('⚡','').replace('🔥','').replace('⚖️','').trim().substring(0,30)+'…' : '—';
+    return '<tr>'
+      +'<td style="font-weight:700">'+f(r.name)+'</td>'
+      +'<td>'+badge(r.batch,'bk')+'</td>'
+      +'<td style="font-size:11px;color:var(--text2)">'+f(r.cohort)+'</td>'
+      +'<td style="font-size:12px;color:'+(r.date?'var(--cyan)':'var(--text3)')+'">'+f(r.date)+'</td>'
+      +'<td>'+(r.session_type?badge(r.session_type==='One-on-One'?'1:1':r.session_type,'bb'):(r.date?badge('—','bk'):'<span style="color:var(--text3);font-size:11px">No session</span>'))+'</td>'
+      +'<td style="font-weight:700;color:var(--accent)">'+( r.avg_conf!=null?r.avg_conf+'%':'—')+'</td>'
+      +'<td style="color:var(--cyan)">'+( r.hrs!=null?r.hrs+'h':'—')+'</td>'
+      +'<td>'+(effortKey?badge(effortKey,effortColor[effortKey]||'bk'):'<span style="color:var(--text3)">—</span>')+'</td>'
+      +'<td>'+(riskKey!=='Unknown'?badge(riskKey,riskColor[riskKey]):'<span style="color:var(--text3)">—</span>')+'</td>'
+      +'<td style="font-size:11px;color:var(--text2);max-width:180px" title="'+(r.matrix||'')+'">'+matrixShort+'</td>'
+      +'</tr>';
+  }).join('') : '<tr><td colspan="10"><div class="empty"><div class="empty-ico">🤝</div><div class="empty-msg">No records match filters</div></div></td></tr>';
+  renderPgn('oo-pgn', data.length, pg, 'renderOO');
+}
+
+function renderOOStats() {
+  var all = DB.oneonone;
+  var sessioned = all.filter(function(r){return r.date;});
+  var noRisk = sessioned.filter(function(r){return r.risk && r.risk.includes('No Risk');}).length;
+  var critRisk = sessioned.filter(function(r){return r.risk && r.risk.includes('Critical');}).length;
+  document.getElementById('oo-stats').innerHTML = [
+    '<div class="stat"><div class="stat-lbl">Total Students</div><div class="stat-val c-blue">'+all.length+'</div><div class="stat-sub">Sem 2 + Sem 4</div></div>',
+    '<div class="stat"><div class="stat-lbl">Sessions Held</div><div class="stat-val c-green">'+sessioned.length+'</div><div class="stat-sub">With session date</div></div>',
+    '<div class="stat"><div class="stat-lbl">No Risk</div><div class="stat-val c-green">'+noRisk+'</div><div class="stat-sub">Performing well</div></div>',
+    '<div class="stat"><div class="stat-lbl">Critical Risk</div><div class="stat-val c-red">'+critRisk+'</div><div class="stat-sub">Need intervention</div></div>',
+  ].join('');
+
+  // Risk bars
+  var risks = {};
+  sessioned.forEach(function(r){ var k=r.risk||'Unknown'; risks[k]=(risks[k]||0)+1; });
+  var riskArr = Object.entries(risks).sort(function(a,b){return b[1]-a[1];});
+  var maxR = riskArr[0]?riskArr[0][1]:1;
+  var rCols = {'No Risk':'var(--green)','Critical Risk':'var(--red)','Unknown':'var(--text3)'};
+  document.getElementById('oo-risk-bars').innerHTML = riskArr.map(function(e){
+    var col = Object.keys(rCols).find(function(k){return e[0].includes(k);});
+    return mbar(e[0], e[1], maxR, rCols[col||'Unknown']||'var(--text3)');
+  }).join('');
+
+  // Matrix bars
+  var matrices = {};
+  sessioned.forEach(function(r){
+    if(!r.matrix) return;
+    var k = r.matrix.replace(/[🏆⚡🔥⚖️]/gu,'').trim();
+    matrices[k]=(matrices[k]||0)+1;
+  });
+  var matArr = Object.entries(matrices).sort(function(a,b){return b[1]-a[1];}).slice(0,6);
+  var maxM = matArr[0]?matArr[0][1]:1;
+  var mCols = ['var(--green)','var(--orange)','var(--red)','var(--cyan)','var(--accent)','var(--purple)'];
+  document.getElementById('oo-matrix-bars').innerHTML = matArr.map(function(e,i){
+    return mbar(e[0].substring(0,40)+(e[0].length>40?'…':''), e[1], maxM, mCols[i%mCols.length]);
+  }).join('');
+}
+
+// ── FOCUSED GROUP ─────────────────────────────────────────────────────────────
+function initFocusedFilters() {
+  var mentors = [...new Set(DB.focused.map(function(r){return r.mentor;}).filter(Boolean))].sort();
+  var sems = [...new Set(DB.focused.map(function(r){return r.sem;}).filter(Boolean))].sort();
+  var mSel = document.getElementById('fg-mentor');
+  mentors.forEach(function(m){ var o=document.createElement('option');o.value=o.text=m;mSel.appendChild(o); });
+  var sSel = document.getElementById('fg-sem');
+  sems.forEach(function(s){ var o=document.createElement('option');o.value=o.text=s;sSel.appendChild(o); });
+}
+
+function renderFocused(pg) {
+  var q=(document.getElementById('fg-q').value||'').toLowerCase();
+  var mentor=document.getElementById('fg-mentor').value;
+  var sem=document.getElementById('fg-sem').value;
+  var cohort=document.getElementById('fg-cohort').value;
+  var data = DB.focused.filter(function(r){
+    if(q && !( r.name.toLowerCase().includes(q) || (r.note1||'').toLowerCase().includes(q) || (r.note2||'').toLowerCase().includes(q))) return false;
+    if(mentor && r.mentor!==mentor) return false;
+    if(sem && r.sem!==sem) return false;
+    if(cohort && r.cohort!==cohort) return false;
+    return true;
+  });
+  data = doSort(data,'fg');
+  document.getElementById('fg-cnt').textContent = data.length+' records';
+  var slice = data.slice((pg-1)*PS, pg*PS);
+
+  document.getElementById('fg-tbody').innerHTML = slice.length ? slice.map(function(r){
+    var note1Short = r.note1 ? r.note1.substring(0,120)+(r.note1.length>120?'…':'') : '—';
+    var note2Short = r.note2 ? r.note2.substring(0,80)+(r.note2.length>80?'…':'') : '—';
+    var cohortColor = r.cohort==='Top'?'bg':r.cohort&&r.cohort.toLowerCase().includes('bottom')?'br':r.cohort?'bo':'bk';
+    return '<tr>'
+      +'<td style="font-weight:700">'+f(r.name)+'</td>'
+      +'<td>'+badge(r.cohort||'—',cohortColor)+'</td>'
+      +'<td style="color:var(--accent);font-weight:600">'+f(r.mentor)+'</td>'
+      +'<td>'+badge(r.sem||'—','bk')+'</td>'
+      +'<td style="font-size:12px;color:var(--text2);max-width:280px;line-height:1.5" title="'+( r.note1||'').replace(/"/g,"'")+'">'+note1Short+'</td>'
+      +'<td style="font-size:12px;color:var(--text3);max-width:200px;line-height:1.5" title="'+( r.note2||'').replace(/"/g,"'")+'">'+note2Short+'</td>'
+      +'</tr>';
+  }).join('') : '<tr><td colspan="6"><div class="empty"><div class="empty-ico">🎯</div><div class="empty-msg">No records match filters</div></div></td></tr>';
+  renderPgn('fg-pgn', data.length, pg, 'renderFocused');
+}
+
+</script>
+</body>
+</html>
